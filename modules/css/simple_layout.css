@@ -1,0 +1,86 @@
+html, body{ 
+ margin:0; 
+ padding:0; 
+ text-align:center; 
+} 
+ 
+#pagewidth{ 
+ width:80%; 
+ text-align:left; 
+ margin:0 auto; 
+} 
+ 
+#header{
+ position:relative; 
+ background-color:#FFFFFF; 
+ width:100%;
+ display:block;
+ overflow:auto;
+} 
+ 
+#leftcol{
+ width:30%; 
+ position:relative; 
+}
+
+#leftcol #autocomplete_sensor{
+ width: 70%;
+}
+
+#leftcol #ok{
+ width: 15%;
+}
+ 
+#maincol{
+ background-color: #DDDDDF;  
+ position: relative; 
+ width:68%;
+ float:right; 
+ margin-left: 10px; 
+ padding-top: 0px; 
+ padding-left: 5px; 
+ padding-right: 5px; 
+ padding-bottom: 5px; 
+}
+
+#maincol h3{
+ margin: 0;
+ padding: 0;
+}
+ 
+#optionset{
+ background-color: #DDDDDF; 
+ padding-top: 0px; 
+ padding-left: 5px; 
+ padding-right: 5px; 
+ padding-bottom: 5px; 
+}
+
+#error{
+ color: red; 
+ background-color: #DDDDDF; 
+ padding-top: 0px; 
+ padding-left: 5px; 
+ padding-right: 5px; 
+}
+
+.clearfix:after {
+ content: "."; 
+ display: block; 
+ height: 0; 
+ clear: both; 
+ visibility: hidden;
+}
+ 
+.clearfix{display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .clearfix{height: 1%;}
+.clearfix{display: block;}
+/* End hide from IE-mac */  
+     
+ @media print{ 
+/*hide the left column when printing*/ 
+#leftcol{display:none;} 
+#twocols, #maincol{width:100%; float:none;}
+}
