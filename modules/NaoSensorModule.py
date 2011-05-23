@@ -2,6 +2,7 @@
 import fileinput
 import random
 from bottle import view, static_file
+from naoqi import ALProxy
 
 app = bottle.Bottle()
 
@@ -9,12 +10,19 @@ name = 'NaoSensorModule'
 path = '/sensor'
 sub = []
 
+# This proxy is used to gain access to all
+# sensor values of the Nao through NaoQi
+memProxy = ALProxy("ALMemory", "localhost", 9559)
+
 # Read all available sensor values once
 # This is done here only for testing purposes.
 # Later they should be loaded from the Nao API directly!
 sensors = []
-for line in fileinput.input(['./modules/data/nao-sensors.txt']):
-	sensors.append(line[:-1]) 
+for line in memProxy.getDataListName():
+	sensors.append(line)
+
+#for line in fileinput.input(['./modules/data/nao-sensors.txt']):
+#s	sensors.append(line[:-1]) 
 	
 # this are all available diagram representation types
 types = ["area", "areaspline", "bar", "column", "line", "scatter", "spline"]
@@ -24,16 +32,27 @@ types = ["area", "areaspline", "bar", "column", "line", "scatter", "spline"]
 @view('sensor_template')
 def index():
 	d = "All available sensor values provided by ALMemory are listed here. Select one and choose a appropriate graphical representation."
-	return dict(module=name, description=d, values=sensors, types=types, value="/sensor/value", string="/sensor/string")
+	return dict(module=name, description=d, values=sensors, types=types, value="/sensor/value", string="/sensor/string", check="/sensor/check")
+
+@app.route('/check/:sensor#.+#')
+def check(sensor=""):
+	try:
+		memProxy.getData(sensor)
+		return "OK"
+	except RuntimeError:
+		return "ERROR"
 
 @app.route('/value/:sensor#.+#')
 def value(sensor=""):
-	random.seed()
-	return str(random.randint(0,100))
+	return str(memProxy.getData(sensor))
 
 @app.route('/string/:sensor#.+#')
 def string(sensor=""):
-	return "A random string as return from %s" % sensor
+	try:
+		return str(memProxy.getData(sensor))
+	except RuntimeError,e:
+		return "Unable to find sensor '%s'<br /><p><b>Stacktrace:</b><br /><i>%s</i></p>" % (sensor,e)
+	#return "A random string as return from %s" % sensor
 	
 # we need libraries for visualization
 # so we have to serve them statically

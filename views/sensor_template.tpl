@@ -66,6 +66,14 @@
 </div>
 
 <script type="text/javascript">
+function checkSensortype(sensortype) {
+	var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", "{{check}}/"+sensortype, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText == "OK";
+}
+
 function getDynamicChart(sensortype) {
     var xmlHttp = null;
     xmlHttp = new XMLHttpRequest();
@@ -182,10 +190,17 @@ $("#ok").click(function() {
 			//interval should be valid
 			if (!isNaN(interval) && interval>=500 && reptype != "") {
 				removeChart();
-				createChart(sensortype, interval, reptype);
-				document.getElementById("result").innerHTML = sensortype;
-				document.getElementById("viz").innerHTML = "Sensor return value represented as: " + diagramtype;
-				document.getElementById("int").innerHTML = "Current interval: " + interval + "ms";
+				if (checkSensortype(sensortype)) {
+					createChart(sensortype, interval, reptype);
+					document.getElementById("result").innerHTML = sensortype;
+					document.getElementById("viz").innerHTML = "Sensor return value represented as: " + diagramtype;
+					document.getElementById("int").innerHTML = "Current interval: " + interval + "ms";
+				} else {
+					document.getElementById("diagram").innerHTML = getStaticText(sensortype);
+					document.getElementById("result").innerHTML = sensortype;
+					document.getElementById("viz").innerHTML = "Sensor return value represented as: " + diagramtype;
+					document.getElementById("int").innerHTML = "";
+				}
 			} else {			
 				document.getElementById("error").innerHTML = "You need to choose a representation type and a valid interval (>=500ms)!";
 			}
