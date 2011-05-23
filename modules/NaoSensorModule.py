@@ -15,15 +15,11 @@ sub = []
 memProxy = ALProxy("ALMemory", "localhost", 9559)
 
 # Read all available sensor values once
-# This is done here only for testing purposes.
-# Later they should be loaded from the Nao API directly!
+# using the ALMemory from the ALProxy.
 sensors = []
 for line in memProxy.getDataListName():
 	sensors.append(line)
 
-#for line in fileinput.input(['./modules/data/nao-sensors.txt']):
-#s	sensors.append(line[:-1]) 
-	
 # this are all available diagram representation types
 types = ["area", "areaspline", "bar", "column", "line", "scatter", "spline"]
 
@@ -36,6 +32,14 @@ def index():
 
 @app.route('/check/:sensor#.+#')
 def check(sensor=""):
+	'''
+	This functions validates the incoming GET request
+	(which is a sensortype name). If ALMemory knows
+	it "OK" is returned, "ERROR" otherwise
+	
+	@arg sensor="" the sensortype name to validate with ALMemory
+	@returns "OK" if ALMemory knows this sensortyp, "ERROR" otherwise
+	'''
 	try:
 		memProxy.getData(sensor)
 		return "OK"
@@ -44,15 +48,29 @@ def check(sensor=""):
 
 @app.route('/value/:sensor#.+#')
 def value(sensor=""):
+	'''
+	Takes a sensortype name and returns it value from ALMemory.
+	WARNING: it is recommended to call check(sensor) first. See above.
+	
+	@arg sensor="" : the sensortype name from which the value should be returned
+	@returns a string representation of the sensortype name value from ALMemory
+	'''
 	return str(memProxy.getData(sensor))
 
 @app.route('/string/:sensor#.+#')
 def string(sensor=""):
+	'''
+	Takes a sensortype name and returns it value from ALMemory.
+	WARNING: this is basically the same as value(sensor) from above
+	but does the checking by itself.
+	
+	@arg sensor="" : the sensortype name from which the value should be returned
+	@returns a string representation of the sensortype name value from ALMemory
+	'''
 	try:
 		return str(memProxy.getData(sensor))
 	except RuntimeError,e:
 		return "Unable to find sensor '%s'<br /><p><b>Stacktrace:</b><br /><i>%s</i></p>" % (sensor,e)
-	#return "A random string as return from %s" % sensor
 	
 # we need libraries for visualization
 # so we have to serve them statically
