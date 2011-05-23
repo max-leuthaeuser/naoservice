@@ -117,7 +117,7 @@ function createChart(sensortype, interval, reptype) {
                intervalId = setInterval(function() {
                   var x = (new Date()).getTime() // current time
                   %# We fetch the current value from the python bottle server here:
-                  var y = parseInt(getDynamicChart(sensortype));
+                  var y = parseFloat(getDynamicChart(sensortype));
                   series.addPoint([x, y], true, true);
                }, interval);
             }
@@ -163,7 +163,7 @@ function createChart(sensortype, interval, reptype) {
             for (i = -10; i <= 0; i++) {
                data.push({
                   x: time + i * parseInt(interval),
-                  y: parseInt(getDynamicChart(sensortype))
+                  y: parseFloat(getDynamicChart(sensortype))
                });
             }
             return data;
