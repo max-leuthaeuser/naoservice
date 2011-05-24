@@ -1,12 +1,16 @@
 ﻿import bottle
-import random
 from bottle import view, static_file
+from naoqi import ALProxy
 
 app = bottle.Bottle()
 
 name = 'NaoBatteryModule'
 path = '/bat'
-sub = ['/level_static', '/level_dynamic', '/info']
+sub = ['/chargingRate']
+
+# This proxy is used to gain access to all
+# sensor values of the Nao through NaoQi
+memProxy = ALProxy("ALMemory", "localhost", 9559)
 
 @app.route('/')
 @app.route('/index.html')
@@ -16,10 +20,6 @@ def index():
 
 # we need libraries for visualization
 # so we have to serve them statically
-@app.route('/jscharts.js')
-def send_static_jschart():
-	return static_file('jscharts.js', root='./modules/js', mimetype='text/javascript')
-
 @app.route('/highcharts.js')
 def send_static_highchart():
 	return static_file('highcharts.js', root='./modules/js', mimetype='text/javascript')
@@ -28,29 +28,17 @@ def send_static_highchart():
 def send_static_jquery():
 	return static_file('jquery.min.js', root='./modules/js', mimetype='text/javascript')
 
-# using some random values in this examples
-# real application should retrieve the actual
-# values from Nao python API
-@app.route('/level_static')
-@view('line_chart_static')
-def bat_level_static():
-	v = [[2,50],[4,42],[8,38],[16,25],[32,2]]
-	d = 'Showing the last %s battery values:' % (str(len(v)))
-	return dict(module=name, description=d, values=v, x_axis='time in min', y_axis='power in watt')
+@app.route('/chargingRate/data')
+def charging_data():
+	voltMin = memProxy.getData("Device/SubDeviceList/Battery/Charge/Sensor/CellVoltageMin")
+	voltMax = memProxy.getData("Device/SubDeviceList/Battery/Charge/Sensor/CellVoltageMax")
+	amperage = memProxy.getData("Device/SubDeviceList/Battery/Current/Sensor/Value")
+	return str(((voltMax+voltMin) / 2) * amperage)
 
-@app.route('/level_dynamic/data')
-def data():
-	random.seed()
-	return str(random.randint(0,100))
-
-@app.route('/level_dynamic')
+@app.route('/chargingRate')
 @view('line_chart_dynamic')
 def bat_level_dynamic():
-	d = 'Showing live battery values:'
-	# we use the method 'data()' here (under '/bat/level_dynamic/data' see above) for 'values'
-	# to generate data with every GET request we retriev from view 'line_chart_dynamic'.
-	return dict(module=name, description=d, values='/bat/level_dynamic/data', x_axis='time', y_axis='power in watt')
-	
-@app.route('/info')
-def bat_info():
-	return "some battery info"
+	d = 'Current charging rate ((CellVoltageMin + CellVoltageMax) / 2 * currentAmparage)'
+	# we use the method 'charging_data()' here (under '/bat/chargingRate/data' see above) for 'values'
+	# to generate data with every GET request we retrieve from view 'line_chart_dynamic'.
+	return dict(module=name, description=d, values='/bat/chargingRate/data', x_axis='time', y_axis='mW')

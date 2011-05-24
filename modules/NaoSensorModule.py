@@ -1,6 +1,4 @@
 ﻿import bottle
-import fileinput
-import random
 from bottle import view, static_file
 from naoqi import ALProxy
 

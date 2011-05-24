@@ -15,3 +15,8 @@ How to add own modules:
 
 If you want to write own modules take a look at the
 examples in /modules and add them as descripted in NaoServiceApp.py.
+
+Google Code Project:
+--------------------
+
+For further information see: http://code.google.com/p/naoservice
