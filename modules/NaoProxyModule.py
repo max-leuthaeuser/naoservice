@@ -20,7 +20,7 @@ for p in fileinput.input(['modules/data/ALModules.txt']):
 	
 # we save all used proxies to
 # create them lazy
-proxie_chache = dict()
+proxy_cache = []
 
 @app.route('/')
 @app.route('/index.html')
@@ -93,10 +93,17 @@ def run(proxyname="", method="", params=""):
 	proxyname = proxyname.replace(" ", "")
 	if params != "()":
 		params = params.replace('"', '\"')
-		params = "('"+params.replace("&amp", " ")+"')"
+		params = "("+params.replace("&amp", " ")+")"
 		
-	command = "ALProxy('%s', 'localhost', 9559).%s%s" %(proxyname,method,params)
+	command = "%s.%s%s" %(proxyname.lower(),method,params)
+	
+	if not proxyname.lower() in proxy_cache:
+		proxy_cache.append(proxyname.lower())
+		new_proxy = "ALProxy('%s', 'localhost', 9559)" % proxyname
+		bridge.eval(proxyname.lower()+"="+new_proxy)		
 		
+	print command
+				
 	l = bridge.evalFull(command)
 	result = "<br /><b>Result of this call:</b><ul>"
 	if l[0] != '':	
