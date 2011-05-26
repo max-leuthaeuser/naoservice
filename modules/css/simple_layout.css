@@ -26,10 +26,6 @@ html, body{
 #leftcol #autocomplete_sensor{
  width: 95%;
 }
-
-#leftcol #ok{
- width: 15%;
-}
  
 #maincol{
  background-color: #DDDDDF;  
