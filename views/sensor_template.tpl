@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="simple_layout.css" type="text/css" />
 <link rel="stylesheet" href="jquery.autocomplete.css" type="text/css" />
 <script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="jquery.dualListBox-1.3.min.js"></script>
 <script type="text/javascript" src="jquery.autocomplete.js"></script>
 
 %# we need the highcharts scripts here
@@ -25,47 +26,103 @@
 			</p>
 		</div>
 		<div id="leftcol">
-			<div id="optionset">
-				<h3>Options</h3>
-				<p>
-					<label>Sensor type:</label><br />
-					<input id="autocomplete_sensor" type='text' />
-				</p>
-			</div>
-			<div id="optionset">
-				<h3>Diagram type</h3>
-				<p>
-					<div>
-						Interpret return value as:<br />
-						<input type="radio" name="rdio" value="SimpleString"> SimpleString (textual output)<br>
-						<input type="radio" name="rdio" value="SimpleValue"> SimpleValue (output as live diagram)
+			<ul class="tabs">
+				<li><a href="#tab1">Single Value</a></li>
+				<li><a href="#tab2">Multiple Values</a></li>
+			</ul>
+			
+			<div class="tab_container">
+				<div id="tab1" class="tab_content">
+					<div id="optionset">
+						<b>Options</b><br />
+						<label>Sensor type:</label><br />
+						<input id="autocomplete_sensor" type='text' />
 					</div>
-					<div id="option">
-						<p>
-						<label>Interval (in ms)</label><br />
-						<input name="interval" title="Please enter a time interval (at least 500 ms)" /><br />
-						<label>Representation:</label><br />
-						%r = ""
-						%for s in types:
-						%r+=' '+s+','
-						%end
-						%r = r[:-1]						
-						<input id="autocomplete_types" type='text' title="Supported types:{{r}}"/>						
-						</p>
+					<div id="optionset">
+						<b>Diagram types:</b><br />
+						<div>
+							Interpret return value as:<br />
+							<input type="radio" name="rdio" value="SimpleString"> SimpleString (textual output)<br>
+							<input type="radio" name="rdio" value="SimpleValue"> SimpleValue (output as live diagram)
+						</div>
+						<div id="option">
+							<p>
+							<label>Interval (in ms)</label><br />
+							<input name="interval" title="Please enter a time interval (at least 500 ms)" /><br />
+							<label>Representation:</label><br />
+							%r = ""
+							%for s in types:
+							%r+=' '+s+','
+							%end
+							%r = r[:-1]						
+							<input id="autocomplete_types" type='text' title="Supported types:{{r}}"/>						
+							</p>
+						</div>
 					</div>
-				</p>
+					<div id="optionset">
+						<b>Start query:</b><br />
+						<input type="button" name="intButton" value="OK" id="ok"/>	
+					</div>
+					<br />
+					<div id="error"></div>
+				</div>
+				<div id="tab2" class="tab_content">
+					<div id="optionset">
+					<b>Select sensors:</b><br />
+					<table>
+						<tr>
+							<td>Filter: <input type="text" id="box1Filter" /><button type="button" id="box1Clear">X</button><br />
+							<select id="box1View" multiple="multiple" style="height:200px;width:100%;">
+							%id = 0
+							%for s in values:
+							<option value="{{str(id)}}">{{s}}</option>
+							%id = id + 1
+							%end
+							</select><br/>
+							<span id="box1Counter" class="countLabel"></span>
+							<select id="box1Storage"></select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<button id="to2" type="button">Add</button>
+								<button id="allTo2" type="button">Add all</button>
+
+								<button id="allTo1" type="button">Remove all</button>
+								<button id="to1" type="button">Remove</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Filter: <input type="text" id="box2Filter" /><button type="button" id="box2Clear">X</button><br />
+								<select id="box2View" multiple="multiple" style="height:200px;width:100%;">
+								</select><br/>
+								<span id="box2Counter" class="countLabel"></span>
+								<select id="box2Storage">
+								</select>
+							</td>
+						</tr>
+					</table>
+					<b>Start query:</b><br />
+					<button id="runmultiple" type="button">OK</button>					
+					</div>
+				</div>
 			</div>
-			<div id="optionset">
-				<h3>Accept this settings:</h3>
-				<input type="button" name="intButton" value="OK" id="ok"/>	
-			</div>
-			<br />
-			<div id="error"></div>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
+function getMultiple(sensors) {
+	var starttime = Math.floor(new Date().getTime()/1000);
+	var s = sensors.toString().replace(new RegExp(",", "g"), "+");
+    var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", "{{multiple}}/"+s, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText + "<br /><i>Query timestamp: </i>" + starttime + "</p>";
+}
+
 function checkSensortype(sensortype) {
 	var xmlHttp = null;
     xmlHttp = new XMLHttpRequest();
@@ -172,6 +229,14 @@ function createChart(sensortype, interval, reptype) {
    });
 }
 
+$("#runmultiple").click(function() {
+	var values = [];
+	$('#box2View option').each(function() { 
+		values.push( $(this).attr('value') );
+	});	
+	document.getElementById("result").innerHTML = getMultiple(values);
+});
+
 $("#ok").click(function() {
   // no error on startup
   document.getElementById("error").innerHTML = ""
@@ -239,6 +304,25 @@ $(document).ready(function() {
 	$("input[name='interval']").val("2000");
 	// predefined representation typ
 	$("#autocomplete_types").val("spline");
+	
+	$(".tab_content").hide(); //Hide all content
+	$("ul.tabs li:first").addClass("active").show(); //Activate first tab
+	$(".tab_content:first").show(); //Show first tab content
+
+	//On Click Event
+	$("ul.tabs li").click(function() {
+		$("ul.tabs li").removeClass("active"); //Remove any "active" class
+		$(this).addClass("active"); //Add "active" class to selected tab
+		$(".tab_content").hide(); //Hide all tab content
+
+		var activeTab = $(this).find("a").attr("href"); //Find the href attribute value to identify the active tab + content
+		$(activeTab).fadeIn(); //Fade in the active ID content
+		return false;
+	});
+	
+	$(function() {
+		$.configureBoxes();
+	});
 });
 
 Highcharts.setOptions({

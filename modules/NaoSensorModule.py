@@ -1,4 +1,5 @@
 ﻿import bottle
+import time
 from bottle import view, static_file
 from naoqi import ALProxy
 
@@ -26,7 +27,7 @@ types = ["area", "areaspline", "bar", "column", "line", "scatter", "spline"]
 @view('sensor_template')
 def index():
 	d = "All available sensor values provided by ALMemory are listed here. Select one and choose a appropriate graphical representation."
-	return dict(module=name, description=d, values=sensors, types=types, value="/sensor/value", string="/sensor/string", check="/sensor/check")
+	return dict(module=name, description=d, values=sensors, types=types, value="/sensor/value", multiple="/sensor/multiple", string="/sensor/string", check="/sensor/check")
 
 @app.route('/check/:sensor#.+#')
 def check(sensor=""):
@@ -69,6 +70,22 @@ def string(sensor=""):
 		return str(memProxy.getData(sensor))
 	except RuntimeError,e:
 		return "Unable to find sensor '%s'<br /><p><b>Stacktrace:</b><br /><i>%s</i></p>" % (sensor,e)
+
+@app.route('/multiple/:arr')
+def multiple(arr=""):
+	'''
+	Takes a array of sensor names (as ID) and return their values from ALMemory.
+	
+	@arg sensors="" : an array of sensor names (as ID) from which the values should be returned
+	@returns a string representation of the sensor values from ALMemory
+	'''
+	ids = arr.split("+")
+	result = "<ul>"
+	for v in ids:
+		value = sensors[int(v)]
+		result += "<li><i>%s</i>: %s</li>" %(value,string(value))
+	result += "</ul><p><i>Response timestamp: </i>%s" %int(time.time())
+	return result
 	
 # we need libraries for visualization
 # so we have to serve them statically
@@ -79,6 +96,10 @@ def send_static_jquery():
 @app.route('/jquery.autocomplete.js')
 def send_static_jquery_autocomplete():
 	return static_file('jquery.autocomplete.js', root='./modules/js')
+
+@app.route('/jquery.dualListBox-1.3.min.js')
+def send_static_jquery_list():
+	return static_file('jquery.dualListBox-1.3.min.js', root='./modules/js')
 
 @app.route('/highcharts.js')
 def send_static_highchart():

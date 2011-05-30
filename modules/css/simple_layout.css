@@ -20,11 +20,12 @@ html, body{
  
 #leftcol{
  width:30%; 
- position:relative; 
+ float:left; 
+ position:relative;
 }
 
 #leftcol #autocomplete_sensor{
- width: 95%;
+ width: 98%;
 }
  
 #maincol{
@@ -79,4 +80,47 @@ html, body{
 /*hide the left column when printing*/ 
 #leftcol{display:none;} 
 #twocols, #maincol{width:100%; float:none;}
+}
+
+ul.tabs {
+	margin: 0;
+	padding: 0;
+	float: left;
+	list-style: none;
+	height: 22px; /*--Set height of tabs--*/
+	width: 100%;
+}
+ul.tabs li {
+	float: left;
+	margin: 0;
+	padding: 0;
+	height: 22px; /*--Subtract 1px from the height of the unordered list--*/
+	line-height: 22px; /*--Vertically aligns the text within the tab--*/
+	/*margin-bottom: -1px; /*--Pull the list item down 1px--*/
+	overflow: hidden;
+	position: relative;
+	background: #fff;
+}
+ul.tabs li a {
+	text-decoration: none;
+	color: #000;
+	display: block;
+	padding: 0 5px;
+	outline: none;
+}
+ul.tabs li a:hover {
+	background: #fff;
+}
+html ul.tabs li.active, html ul.tabs li.active a:hover  {
+	background: #DDDDDF;
+}
+
+.tab_container {
+	overflow: hidden;
+	clear: both;
+	float: left; width: 100%;
+	background: #DDDDDF;
+}
+.tab_content {
+	padding: 5px;
 }

@@ -101,9 +101,7 @@ def run(proxyname="", method="", params=""):
 		proxy_cache.append(proxyname.lower())
 		new_proxy = "ALProxy('%s', 'localhost', 9559)" % proxyname
 		bridge.eval(proxyname.lower()+"="+new_proxy)		
-		
-	print command
-				
+						
 	l = bridge.evalFull(command)
 	result = "<br /><b>Result of this call:</b><ul>"
 	if l[0] != '':	
