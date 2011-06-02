@@ -25,6 +25,6 @@ def bat_level():
 	# using some random values here
 	# real application should retrieve the actual
 	# values from Nao python API
-	v = [["'Free'",80],["'Used'",5],["'Cached'",15]]
+	v = [["'Free'", 80], ["'Used'", 5], ["'Cached'", 15]]
 	d = 'Showing the current memory status:'
 	return dict(module=name, description=d, values=v)

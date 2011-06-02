@@ -68,8 +68,8 @@ def string(sensor=""):
 	'''
 	try:
 		return str(memProxy.getData(sensor))
-	except RuntimeError,e:
-		return "Unable to find sensor '%s'<br /><p><b>Stacktrace:</b><br /><i>%s</i></p>" % (sensor,e)
+	except RuntimeError, e:
+		return "Unable to find sensor '%s'<br /><p><b>Stacktrace:</b><br /><i>%s</i></p>" % (sensor, e)
 
 @app.route('/multiple/:arr')
 def multiple(arr=""):
@@ -83,8 +83,8 @@ def multiple(arr=""):
 	result = "<ul>"
 	for v in ids:
 		value = sensors[int(v)]
-		result += "<li><i>%s</i>: %s</li>" %(value,string(value))
-	result += "</ul><p><i>Response timestamp: </i>%s" %int(time.time())
+		result += "<li><i>%s</i>: %s</li>" % (value, string(value))
+	result += "</ul><p><i>Response timestamp: </i>%s" % int(time.time())
 	return result
 	
 # we need libraries for visualization

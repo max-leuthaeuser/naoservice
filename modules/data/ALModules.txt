@@ -1,4 +1,4 @@
-﻿ALAudioDevice
+ALAudioDevice
 ALAudioPlayer
 ALAudioSourceLocalization
 ALBehaviorManager

@@ -38,12 +38,12 @@ def nargs(proxyname="", method=""):
 	if not proxyname in proxies:
 		return -1
 	try:
-		cppHeader = CppHeaderParser.CppHeader("modules/data/proxies/"+proxyname.lower()+"proxy.h")
+		cppHeader = CppHeaderParser.CppHeader("modules/data/proxies/" + proxyname.lower() + "proxy.h")
 	except CppHeaderParser.CppParseError:
 		# error case, something is wrong with the header file
 		return -1
 	
-	proxy = cppHeader.classes[proxyname+"Proxy"]
+	proxy = cppHeader.classes[proxyname + "Proxy"]
 	m = [x for x in proxy["methods"]["public"] if x["name"] == method][0]
 	return str(len(m["parameters"]))
 
@@ -55,7 +55,7 @@ def htmllist(proxyname=""):
 	'''
 	proxyname = proxyname.replace(" ", "")
 	if proxyname in proxies:
-		filename = "modules/data/proxies/"+proxyname.lower()+"proxy.h"
+		filename = "modules/data/proxies/" + proxyname.lower() + "proxy.h"
 		return parseToHtml(filename, proxyname)
 	else:
 		return "<b>This module is not available.</b>"
@@ -71,56 +71,61 @@ def list(proxyname=""):
 		return ""
 	
 	try:
-		cppHeader = CppHeaderParser.CppHeader("modules/data/proxies/"+proxyname.lower()+"proxy.h")
+		cppHeader = CppHeaderParser.CppHeader("modules/data/proxies/" + proxyname.lower() + "proxy.h")
 	except CppHeaderParser.CppParseError:
 		# error case, something is wrong with the header file
 		return []
-	proxy = cppHeader.classes[proxyname+"Proxy"]
+	proxy = cppHeader.classes[proxyname + "Proxy"]
 	l = proxy["methods"]["public"]
 	result = ""
 	for s in l:
-		result += s["name"]+","
+		result += s["name"] + ","
 	return result[:-1]
 
 @app.route('/run/:proxyname/:method/:params')
 def run(proxyname="", method="", params=""):
 	'''
 	Runs a method with given parameters for a given proxy
-	and returns a list containing the return value, exceptions, std out and std err.
+	and returns a JSON string containing the return value, exceptions, std out and std err.
 	
 	@see: NaoSDK ALProxy.evalFull
 	'''	
 	proxyname = proxyname.replace(" ", "")
 	if params != "()":
 		params = params.replace('"', '\"')
-		params = "("+params.replace("&amp", " ")+")"
+		params = "(" + params.replace("&amp", " ") + ")"
 		
-	command = "%s.%s%s" %(proxyname.lower(),method,params)
+	command = "%s.%s%s" % (proxyname.lower(), method, params)
 	
 	if not proxyname.lower() in proxy_cache:
 		proxy_cache.append(proxyname.lower())
 		new_proxy = "ALProxy('%s', 'localhost', 9559)" % proxyname
-		bridge.eval(proxyname.lower()+"="+new_proxy)		
+		bridge.eval(proxyname.lower() + "=" + new_proxy)		
 						
 	l = bridge.evalFull(command)
+	
+	result = dict(returnvalue=l[0], exception=l[1], stdout=l[2], stderr=l[3])
+	
+	'''
 	result = "<br /><b>Result of this call:</b><ul>"
 	if l[0] != '':	
-		result += "<li>Return:<br />%s</li>" %l[0]
+		result += "<li>Return:<br />%s</li>" % l[0]
 	else:
 		result += "<li>Empty return</li>"
 	if l[1] != '':	
-		result += "<li>Exception:<br />%s</li>" %l[1]
+		result += "<li>Exception:<br />%s</li>" % l[1]
 	else:
 		result += "<li>No exception</li>"
 	if l[2] != '':	
-		result += "<li>Std out:<br />%s</li>" %l[2]
+		result += "<li>Std out:<br />%s</li>" % l[2]
 	else:
 		result += "<li>Empty std out</li>"
 	if l[3] != '':	
-		result += "<li>Std err:<br />%s</li>" %l[3]
+		result += "<li>Std err:<br />%s</li>" % l[3]
 	else:
 		result += "<li>Empty std err</li>"	
 	result += "</ul>"
+	'''
 	return result
 
 @app.route('/interface/:proxyname/:method')
@@ -131,20 +136,20 @@ def interface(proxyname="", method=""):
 	'''
 	proxyname = proxyname.replace(" ", "")
 	try:
-		cppHeader = CppHeaderParser.CppHeader("modules/data/proxies/"+proxyname.lower()+"proxy.h")
+		cppHeader = CppHeaderParser.CppHeader("modules/data/proxies/" + proxyname.lower() + "proxy.h")
 	except CppHeaderParser.CppParseError:
 		# error case, something is wrong with the header file
 		return "Error while parsing the cpp header file"
-	proxy = cppHeader.classes[proxyname.replace(" ","")+"Proxy"]
+	proxy = cppHeader.classes[proxyname.replace(" ", "") + "Proxy"]
 	m = [x for x in proxy["methods"]["public"] if x["name"] == method][0]
 	params = m["parameters"]
-	result = "<b>%s.%s</b><br /><table border='0'>" %(proxyname,method)
+	result = "<b>%s.%s</b><br /><table border='0'>" % (proxyname, method)
 	i = 1
 	for p in params:	
 		result += "<tr>"
-		result += "<td>%s : <i>%s</i></td>" %(p["name"],p["type"])
-		input = "input%i" %i
-		result += "<td><input id='%s' type='text' /></td>" %input
+		result += "<td>%s : <i>%s</i></td>" % (p["name"], p["type"])
+		input = "input%i" % i
+		result += "<td><input id='%s' type='text' /></td>" % input
 		result += "<tr>"
 		i = i + 1
 	result += "</table>"

@@ -13,7 +13,7 @@ def parseToHtml(filename, proxyname):
     except CppHeaderParser.CppParseError, e:
         return str(e)
     
-    proxy = cppHeader.classes[proxyname+"Proxy"]
+    proxy = cppHeader.classes[proxyname + "Proxy"]
     pmethods = proxy["methods"]["public"]
     
     result = "<h3>Methods of <i>%s</i></h3>" % proxyname

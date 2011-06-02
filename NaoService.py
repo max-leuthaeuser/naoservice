@@ -10,7 +10,6 @@ License: GPL (see LICENSE.txt for details)
 """
 
 __author__ = 'Max Leuthaeuser'
-__version__ = '0.10.dev'
 __license__ = 'GPL'
 
 import bottle
@@ -53,7 +52,7 @@ class NaoService:
 		self._server = server
 				
 	def add_module(self, module):
-		m = __import__(name="modules."+module, fromlist=['modules'])
+		m = __import__(name="modules." + module, fromlist=['modules'])
 		mount(m.app, m.path)
 		module_list.append(self.Module(module, m.path, m.sub))
 						

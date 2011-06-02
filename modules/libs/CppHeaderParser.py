@@ -71,16 +71,16 @@ tokens = [
     'COMMENT_SINGLELINE',
     'COMMENT_MULTILINE',
     'PRECOMP_MACRO',
-    'PRECOMP_MACRO_CONT', 
+    'PRECOMP_MACRO_CONT',
     'ASTERISK',
     'AMPERSTAND',
     'EQUALS',
     'MINUS',
-    'PLUS',  
-    'DIVIDE', 
-    'CHAR_LITERAL', 
+    'PLUS',
+    'DIVIDE',
+    'CHAR_LITERAL',
     'STRING_LITERAL',
-    'OPERATOR_DIVIDE_OVERLOAD', 
+    'OPERATOR_DIVIDE_OVERLOAD',
     'NEW_LINE',
 ]
 
@@ -119,9 +119,10 @@ t_CHAR_LITERAL = "'.'"
 t_STRING_LITERAL = r'"([^"\\]|\\.)*"'
 #Found at http://ostermiller.org/findcomment.html
 def t_COMMENT_MULTILINE(t):
-    r'/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/'
+    #r'/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/'
+    r'(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(///.*)'
     global doxygenCommentCache
-    if t.value.startswith("/**") or t.value.startswith("/*!"):
+    if t.value.startswith("/**") or t.value.startswith("/*!") or t.value.startswith("///"):
         #not sure why, but get double new lines
         v = t.value.replace("\n\n", "\n")
         #strip prefixing whitespace
@@ -139,7 +140,7 @@ debug = 0
 
 supportedAccessSpecifier = [
     'public',
-    'protected', 
+    'protected',
     'private'
 ]
 
@@ -207,7 +208,7 @@ class CppClass(dict):
     }
     """
     def __init__(self, nameStack):
-        if (debug): print "Class:   ",  nameStack
+        if (debug): print "Class:   ", nameStack
         if (len(nameStack) < 2):
             print "Error detecting class"
             return
@@ -236,7 +237,7 @@ class CppClass(dict):
                     tmpInheritClass["access"] = tmpStack[0]
                     tmpInheritClass["class"] = tmpStack[1]
                 else:
-                    print "Warning: Cant figure out class inheriting %s\n"%(" ".join(tmpStack))
+                    print "Warning: Cant figure out class inheriting %s\n" % (" ".join(tmpStack))
                     continue
                 inheritList.append(tmpInheritClass)
         methodAccessSpecificList = {}
@@ -257,33 +258,33 @@ class CppClass(dict):
         """Convert class to a string"""
         namespace_prefix = ""
         if self["namespace"]: namespace_prefix = self["namespace"] + "::"
-        rtn = "class %s\n"%(namespace_prefix + self["name"])
+        rtn = "class %s\n" % (namespace_prefix + self["name"])
         try:
-            print self["doxygen"], 
+            print self["doxygen"],
         except: pass
         if "inherits" in self.keys():
             rtn += "Inherits: "
             for inheritClass in self["inherits"]:
-                rtn += "%s %s, "%(inheritClass["access"], inheritClass["class"])
+                rtn += "%s %s, " % (inheritClass["access"], inheritClass["class"])
             rtn += "\n"
         rtn += "{\n"
         for accessSpecifier in supportedAccessSpecifier:
-            rtn += "%s\n"%(accessSpecifier)
+            rtn += "%s\n" % (accessSpecifier)
             #Enums
             if (len(self["enums"][accessSpecifier])):
                 rtn += "    // Enums\n"
             for enum in self["enums"][accessSpecifier]:
-                rtn += "    %s\n"%(repr(enum))
+                rtn += "    %s\n" % (repr(enum))
             #Properties
             if (len(self["properties"][accessSpecifier])):
                 rtn += "    // Properties\n"
             for property in self["properties"][accessSpecifier]:
-                rtn += "    %s\n"%(repr(property))
+                rtn += "    %s\n" % (repr(property))
             #Methods
             if (len(self["methods"][accessSpecifier])):
                 rtn += "    // Method\n"
             for method in self["methods"][accessSpecifier]:
-                rtn += "    %s\n"%(repr(method))
+                rtn += "    %s\n" % (repr(method))
         rtn += "}\n"
         return rtn
 
@@ -297,7 +298,7 @@ class CppMethod(dict):
     self['parameters'] - List of CppVariables
     """
     def __init__(self, nameStack, curClass):
-        if (debug): print "Method:   ",  nameStack
+        if (debug): print "Method:   ", nameStack
         global doxygenCommentCache
         if len(doxygenCommentCache):
             self["doxygen"] = doxygenCommentCache
@@ -312,7 +313,7 @@ class CppMethod(dict):
             self["rtnType"] = "void"
         paramsStack = nameStack[nameStack.index('(') + 1: ]
         #Remove things from the stack till we hit the last paren, this helps handle abstract and normal methods
-        while (paramsStack[-1]  != ")"):
+        while (paramsStack[-1] != ")"):
             paramsStack.pop()
         paramsStack.pop()
         params = []
@@ -347,10 +348,10 @@ class CppMethod(dict):
         #Create the variable now
         while (len(paramsStack)):
             if (',' in paramsStack):
-                params.append(CppVariable(paramsStack[0:paramsStack.index(',')],  doxyVarDesc=doxyVarDesc))
+                params.append(CppVariable(paramsStack[0:paramsStack.index(',')], doxyVarDesc=doxyVarDesc))
                 paramsStack = paramsStack[paramsStack.index(',') + 1:]
             else:
-                param = CppVariable(paramsStack,  doxyVarDesc=doxyVarDesc)
+                param = CppVariable(paramsStack, doxyVarDesc=doxyVarDesc)
                 if len(param.keys()):
                     params.append(param)
                 break
@@ -369,8 +370,8 @@ class CppVariable(dict):
     self['defaltValue'] - Default value of the variable, this key will only
         exist if there is a default value
     """
-    def __init__(self, nameStack,  **kwargs):
-        if (debug): print "Variable: ",  nameStack
+    def __init__(self, nameStack, **kwargs):
+        if (debug): print "Variable: ", nameStack
         if (len(nameStack) < 2):
             return
         global doxygenCommentCache
@@ -384,10 +385,10 @@ class CppVariable(dict):
         else:
             self["type"] = " ".join(nameStack[:-1])
             self["name"] = nameStack[-1]
-        self["type"] = self["type"].replace(" :",":")
-        self["type"] = self["type"].replace(": ",":")
-        self["type"] = self["type"].replace(" <","<")
-        self["type"] = self["type"].replace(" >",">")
+        self["type"] = self["type"].replace(" :", ":")
+        self["type"] = self["type"].replace(": ", ":")
+        self["type"] = self["type"].replace(" <", "<")
+        self["type"] = self["type"].replace(" >", ">")
         #Optional doxygen description
         try:
             self["desc"] = kwargs["doxyVarDesc"][self["name"]]
@@ -429,7 +430,7 @@ class CppEnum(dict):
             elif len(tmpStack) >= 3 and tmpStack[1] == "=":
                 valueList.append({"name": tmpStack[0], "value": " ".join(tmpStack[2:])})
             elif len(tmpStack) == 2 and tmpStack[1] == "=":
-                if (debug): print "Missed value for %s"%tmpStack[0]
+                if (debug): print "Missed value for %s" % tmpStack[0]
                 valueList.append({"name": tmpStack[0]})
         if len(valueList):
             self["values"] = valueList
@@ -459,7 +460,7 @@ class CppHeader:
     self.classes - Dictionary of classes found in a given header file where the
         key is the name of the class
     """
-    def __init__(self, headerFileName, argType = "file"):
+    def __init__(self, headerFileName, argType="file"):
         if (argType == "file"):
             self.headerFileName = os.path.expandvars(headerFileName)
             self.mainClass = os.path.split(self.headerFileName)[1][:-2]
@@ -480,6 +481,7 @@ class CppHeader:
         self.curAccessSpecifier = 'private'
     
         if (len(self.headerFileName)):
+            #self.headerFileName = self.headerFileName.replace('\xef\xbb\xbf','')
             headerFileStr = "\n".join(open(self.headerFileName).readlines())
         self.braceDepth = 0
         lex.input(headerFileStr)
@@ -555,51 +557,51 @@ class CppHeader:
     def evaluate_stack(self):
         """Evaluates the current name stack"""
         global doxygenCommentCache
-        if (debug): print "Evaluating stack %s at..."%self.nameStack
+        if (debug): print "Evaluating stack %s at..." % self.nameStack
         if (len(self.curClass)):
-            if (debug): print "%s (%s) "%(self.curClass, self.curAccessSpecifier), 
+            if (debug): print "%s (%s) " % (self.curClass, self.curAccessSpecifier),
         if (len(self.nameStack) == 0):
-            if (debug): print "line ",lineno()
+            if (debug): print "line ", lineno()
             if (debug): print "(Empty Stack)"
             return
         elif (self.nameStack[0] == "namespace"):
             #Taken care of outside of here
             pass
         elif (self.nameStack[0] == "class"):
-            if (debug): print "line ",lineno()
+            if (debug): print "line ", lineno()
             self.evaluate_class_stack()
         elif (self.nameStack[0] == "struct"):
-            if (debug): print "line ",lineno()
+            if (debug): print "line ", lineno()
             self.curAccessSpecifier = "public"
             self.evaluate_class_stack()
         elif (len(self.curClass) == 0):
-            if (debug): print "line ",lineno()
+            if (debug): print "line ", lineno()
             if is_enum_namestack(self.nameStack):
                 self.evaluate_enum_stack()
             self.nameStack = []
             doxygenCommentCache = ""
             return
         elif (self.braceDepth < 1):
-            if (debug): print "line ",lineno()
+            if (debug): print "line ", lineno()
             #Ignore global stuff for now
-            if (debug): print "Global stuff: ",  self.nameStack
+            if (debug): print "Global stuff: ", self.nameStack
             self.nameStack = []
             doxygenCommentCache = ""
             return
         elif (self.braceDepth > len(self.nameSpaces) + 1):
-            if (debug): print "line ",lineno()
+            if (debug): print "line ", lineno()
             self.nameStack = []
             doxygenCommentCache = ""
             return
         elif is_enum_namestack(self.nameStack):
-            if (debug): print "line ",lineno()
+            if (debug): print "line ", lineno()
             #elif self.nameStack[0] == "enum":
             self.evaluate_enum_stack()
         elif ('(' in self.nameStack):
-            if (debug): print "line ",lineno()
+            if (debug): print "line ", lineno()
             self.evaluate_method_stack()
         else:
-            if (debug): print "line ",lineno()
+            if (debug): print "line ", lineno()
             self.evaluate_property_stack()
         self.nameStack = []
         doxygenCommentCache = ""
@@ -646,18 +648,18 @@ class CppHeader:
                 if newEnum.has_key("name"):
                     instanceType = newEnum["name"]
                 for instance in newEnum["instances"]:
-                    self.nameStack = [instanceType,  instance]
+                    self.nameStack = [instanceType, instance]
                     self.evaluate_property_stack()
                 del newEnum["instances"]
 
-    def cur_namespace(self, add_double_colon = False):
+    def cur_namespace(self, add_double_colon=False):
         rtn = ""
         i = 0
         while i < len(self.nameSpaces):
             rtn += self.nameSpaces[i]
             if add_double_colon or i < len(self.nameSpaces) - 1:
                 rtn += "::"
-            i+=1
+            i += 1
         return rtn
     
     
