@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 NaoJavaCodeGenerator is able to generate Java code to run
-methods remotely with the Nao webservice (NaoService). All methods are
-generated from the Nao API.
+methods remotely with the Nao webservice (NaoService). All Java
+code is generated from the Nao SDK/API.
 
 Copyright (c) 2011, Max Leuthaeuser
 License: GPL (see LICENSE.txt for details)
@@ -34,6 +34,9 @@ class NaoJavaCodeGenerator(NaoCodeGenerator):
         return proxies
     
     def _get_methods(self, module):
+        '''
+        Returns a list of all public methods of a given module.
+        '''
         try:
             cppHeader = CppHeaderParser.CppHeader("../modules/data/proxies/" + module.lower() + "proxy.h")
         except CppHeaderParser.CppParseError:
@@ -42,6 +45,10 @@ class NaoJavaCodeGenerator(NaoCodeGenerator):
         return m["methods"]["public"]
     
     def _get_doxygen_for_class(self, module):
+        '''
+        Returns a string containing the doxygen documentation
+        for a given module.
+        '''
         try:
             cppHeader = CppHeaderParser.CppHeader("../modules/data/proxies/" + module.lower() + "proxy.h")
         except CppHeaderParser.CppParseError:
@@ -50,6 +57,10 @@ class NaoJavaCodeGenerator(NaoCodeGenerator):
         return m["doxygen"]
     
     def _get_doxygen_for_method(self, module, method, params):
+        '''
+        Returns a string containing the doxygen documentation
+        for a given method of the given module.
+        '''
         try:
             cppHeader = CppHeaderParser.CppHeader("../modules/data/proxies/" + module.lower() + "proxy.h")
         except CppHeaderParser.CppParseError:
@@ -63,6 +74,10 @@ class NaoJavaCodeGenerator(NaoCodeGenerator):
         return ""
     
     def get_request_code(self):
+        '''
+        Returns a string containing the request code statically which
+        is needed to perform a request to the Nao webservice.
+        '''
         return '''
     /**
      * Internal helper method to send a request to the Nao web service.
@@ -154,6 +169,10 @@ public class Nao {
 '''
         
         def arguments_to_string(args):
+            '''
+            Small helper method which returns a well formatted
+            string out of a list of arguments of a method used below.
+            '''
             result = ""
             for a in args:
                 type = self.translate(a["type"])
@@ -212,6 +231,7 @@ public class Nao {
         result += self.get_request_code() + "}"
         return result
     
+# we need to provide all imports statically
 imports = []
 imports.append("java.io.BufferedReader")
 imports.append("java.io.IOException")
@@ -222,6 +242,8 @@ imports.append("java.net.URLConnection")
 imports.append("org.json.JSONObject")
 imports.append("org.json.JSONException")
     
+# finally the code generation can be triggered and written
+# down to a file.
 print "starting code generation ..."
 cg = NaoJavaCodeGenerator(imports)
 cg.read_mapping("tojava.map")

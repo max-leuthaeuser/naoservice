@@ -14,7 +14,8 @@ from AbstractMetaClass import AbstractMetaClass
 class JavaMetaClass(AbstractMetaClass):
     '''
     JavaMetaClass defines a simple meta class (M2) for Java classes which allows you to
-    create concrete Java classes from this (M1). Inheritance and JavaDoc is not supported yet.
+    create concrete Java classes from this (M1). Inheritance and inner classes are
+    not supported yet.
     '''
 
     _modifier = []
@@ -25,6 +26,9 @@ class JavaMetaClass(AbstractMetaClass):
         self.set_modifier(modifier)
         
     def set_javadoc(self, doc):
+        '''
+        Sets the javadoc for this class as string.
+        '''
         self._javadoc = doc
     
     def set_modifier(self, modifier):
@@ -92,9 +96,9 @@ class JavaMetaClass(AbstractMetaClass):
                 m += s + " "
             
             if self._value == "":
-                return m + self._name + ";"
+                return "\t" + m + self._name + ";"
             else:
-                return m + self._type + " " + self._name + " = " + self._value + ";"
+                return "\t" + m + self._type + " " + self._name + " = " + self._value + ";"
             
     class JavaMethod:
         '''
@@ -118,6 +122,9 @@ class JavaMetaClass(AbstractMetaClass):
             self._ident = ident
             
         def set_javadoc(self, doc):
+            '''
+            Sets the javadoc for this class as string.
+            '''
             self._javadoc = doc
             
         def __eq__(self, other):
@@ -132,7 +139,7 @@ class JavaMetaClass(AbstractMetaClass):
                 a += s + ", "
             a = a[:-2]
             if self._javadoc != "":
-                # convert to javadoc
+                # convert doxygen to javadoc
                 doc = self._javadoc.replace("<returns>", "<br /><i>Actual SDK return value:</i>")
                 doc = doc.replace("</returns>", "")
                 doc = doc.replace("</param>", "")

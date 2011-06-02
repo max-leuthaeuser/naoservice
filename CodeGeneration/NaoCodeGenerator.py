@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 NaoCodeGenerator is able to generate sourcecode for any language to run
-methods remotely with the Nao webservice (NaoService). All methods are
-generated from the Nao API.
+methods remotely with the Nao webservice (NaoService). All code will be
+generated from the Nao SDK/API.
 
 Copyright (c) 2011, Max Leuthaeuser
 License: GPL (see LICENSE.txt for details)
@@ -108,4 +108,3 @@ class NaoCodeGenerator:
 		if mapping is None or len(mapping) == 0:
 			raise ValueError('The mapping should not be None or empty!')
 		self._mapping = mapping
-		
