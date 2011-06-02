@@ -12,10 +12,13 @@ __author__ = 'Max Leuthaeuser'
 __license__ = 'GPL'
 
 from NaoCodeGenerator import NaoCodeGenerator
-from modules.libs import CppHeaderParser 
 from JavaMetaClass import JavaMetaClass
 from UserString import MutableString
 import fileinput
+import os, sys
+lib_path = os.path.abspath('../modules/libs')
+sys.path.append(lib_path)
+import CppHeaderParser 
 
 class NaoJavaCodeGenerator(NaoCodeGenerator):
     '''
