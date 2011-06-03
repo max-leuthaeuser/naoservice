@@ -180,7 +180,7 @@ public class Nao {
             for a in args:
                 type = self.translate(a["type"])
                 if type.find("String") > -1:
-                    result += "+\"+'\"+" + a["name".lower()].lower() + "+\"'\""					
+                    result += "+\",'\"+" + a["name".lower()].lower() + "+\"'\""					
                 else:
                     result += "+\",\"+" + a["name".lower()].lower()
             return result
@@ -209,7 +209,7 @@ public class Nao {
                 if a != "":
                     body = 'return requestAction("%s/%s/"%s);' % (module, m["name"], a)
                     # we replace wrongly placed '+' from the body
-                    body = body.replace('/"+"+\'"', '/"+"\'"')
+                    body = body.replace('/"+",\'"', '/"+"\'"')
                     body = body.replace('/"+","', '/"')
                 else:
                     body = 'return requestAction("%s/%s/()");' % (module, m["name"])
