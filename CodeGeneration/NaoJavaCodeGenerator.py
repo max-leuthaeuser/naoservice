@@ -180,9 +180,9 @@ public class Nao {
             for a in args:
                 type = self.translate(a["type"])
                 if type.find("String") > -1:
-                    result += "+\"+'\"+" + a["name".lower()].lower() + "+\"'\""
+                    result += "+\"+'\"+" + a["name".lower()].lower() + "+\"'\""					
                 else:
-                    result += "+\"+\"+" + a["name".lower()].lower()
+                    result += "+\",\"+" + a["name".lower()].lower()
             return result
         
         modules = self._get_modules()
@@ -190,7 +190,6 @@ public class Nao {
         # inner classes
         # walk through all modules
         for module in modules:
-            #module = module.replace('\xef\xbb\xbf','')
             # create a new class
             cla = JavaMetaClass(module, [], [], [JavaMetaClass.Modifier.PRIVATE])
             
@@ -211,7 +210,7 @@ public class Nao {
                     body = 'return requestAction("%s/%s/"%s);' % (module, m["name"], a)
                     # we replace wrongly placed '+' from the body
                     body = body.replace('/"+"+\'"', '/"+"\'"')
-                    body = body.replace('/"+"+"', '/"')
+                    body = body.replace('/"+","', '/"')
                 else:
                     body = 'return requestAction("%s/%s/()");' % (module, m["name"])
                 # finally we can create the method
