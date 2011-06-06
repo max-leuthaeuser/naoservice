@@ -153,8 +153,6 @@ public class Nao {
 
     /** The port where the Nao service is running. */
     protected int port;
-    
-    protected Nao nao;
 
     /**
     * Creates a new {@link Nao} for a given IP address and a given port.
@@ -180,7 +178,7 @@ public class Nao {
             for a in args:
                 type = self.translate(a["type"])
                 if type.find("String") > -1:
-                    result += "+\",'\"+" + a["name".lower()].lower() + "+\"'\""					
+                    result += "+\"+'\"+" + a["name".lower()].lower() + "+\"'\""					
                 else:
                     result += "+\",\"+" + a["name".lower()].lower()
             return result
@@ -209,7 +207,7 @@ public class Nao {
                 if a != "":
                     body = 'return requestAction("%s/%s/"%s);' % (module, m["name"], a)
                     # we replace wrongly placed '+' from the body
-                    body = body.replace('/"+",\'"', '/"+"\'"')
+                    body = body.replace('/"+"+\'"', '/"+"\'"')
                     body = body.replace('/"+","', '/"')
                 else:
                     body = 'return requestAction("%s/%s/()");' % (module, m["name"])
