@@ -143,7 +143,7 @@ class NaoJavaCodeGenerator(NaoCodeGenerator):
 * Simple example how to use this:
 * <pre>
 * Nao n = new Nao("192.168.10.221", 8080);
-* ALMemory almem = n.createALMemory();
+* Nao.ALMemory almem = n.createALMemory();
 * System.out.println(almem.getBrokerName());
 * </pre></p>
 */
@@ -189,7 +189,7 @@ public class Nao {
         # walk through all modules
         for module in modules:
             # create a new class
-            cla = JavaMetaClass(module, [], [], [JavaMetaClass.Modifier.PRIVATE])
+            cla = JavaMetaClass(module, [], [], [JavaMetaClass.Modifier.PUBLIC])
             
             # walk through all methods
             for m in self._get_methods(module):
