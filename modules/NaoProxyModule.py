@@ -82,7 +82,7 @@ def list(proxyname=""):
 		result += s["name"] + ","
 	return result[:-1]
 
-@app.route('/run/:proxyname/:method/:params')
+@app.route('/run/:proxyname/:method/:params#.+#')
 def run(proxyname="", method="", params=""):
 	'''
 	Runs a method with given parameters for a given proxy
@@ -104,29 +104,7 @@ def run(proxyname="", method="", params=""):
 						
 	l = bridge.evalFull(command)
 	
-	result = dict(returnvalue=l[0], exception=l[1], stdout=l[2], stderr=l[3])
-	
-	'''
-	result = "<br /><b>Result of this call:</b><ul>"
-	if l[0] != '':	
-		result += "<li>Return:<br />%s</li>" % l[0]
-	else:
-		result += "<li>Empty return</li>"
-	if l[1] != '':	
-		result += "<li>Exception:<br />%s</li>" % l[1]
-	else:
-		result += "<li>No exception</li>"
-	if l[2] != '':	
-		result += "<li>Std out:<br />%s</li>" % l[2]
-	else:
-		result += "<li>Empty std out</li>"
-	if l[3] != '':	
-		result += "<li>Std err:<br />%s</li>" % l[3]
-	else:
-		result += "<li>Empty std err</li>"	
-	result += "</ul>"
-	'''
-	return result
+	return dict(returnvalue=l[0], exception=l[1], stdout=l[2], stderr=l[3])
 
 @app.route('/interface/:proxyname/:method')
 def interface(proxyname="", method=""):
