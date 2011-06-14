@@ -84,7 +84,7 @@ def multiple(arr=""):
 	for v in ids:
 		value = sensors[int(v)]
 		result[value] = string(value)
-	result[timestamp] = "%.6f" % time.time()
+	result['timestamp'] = "%.6f" % time.time()
 	return result
 	
 # we need libraries for visualization

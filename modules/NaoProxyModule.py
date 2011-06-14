@@ -1,4 +1,7 @@
-﻿import fileinput
+﻿from __future__ import with_statement
+import threading
+from threading import Lock
+import fileinput
 from libs import CppHeaderParser
 import bottle
 from bottle import view, static_file
@@ -11,6 +14,8 @@ name = 'NaoProxyModule'
 path = '/proxy'
 sub = []
 
+used = False
+lock = Lock()
 bridge = ALProxy("ALPythonBridge", "localhost", 9559)
 
 # Read all available proxies once
@@ -88,8 +93,11 @@ def run(proxyname="", method="", params=""):
 	Runs a method with given parameters for a given proxy
 	and returns a JSON string containing the return value, exceptions, std out and std err.
 	
+	threadsafe implementation
+	
 	@see: NaoSDK ALProxy.evalFull
-	'''	
+	'''		
+	global used
 	proxyname = proxyname.replace(" ", "")
 	if params != "()":
 		params = params.replace('"', '\"')
@@ -102,7 +110,13 @@ def run(proxyname="", method="", params=""):
 		new_proxy = "ALProxy('%s', 'localhost', 9559)" % proxyname
 		bridge.eval(proxyname.lower() + "=" + new_proxy)		
 						
-	l = bridge.evalFull(command)
+	if used:
+		l = ALProxy("ALPythonBridge", "localhost", 9559).evalFull(command)
+	else:						
+		with lock:
+			used = True
+			l = bridge.evalFull(command)
+			used = False
 	
 	return dict(returnvalue=l[0], exception=l[1], stdout=l[2], stderr=l[3])
 
