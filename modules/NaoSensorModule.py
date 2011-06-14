@@ -77,14 +77,14 @@ def multiple(arr=""):
 	Takes a array of sensor names (as ID) and return their values from ALMemory.
 	
 	@arg sensors="" : an array of sensor names (as ID) from which the values should be returned
-	@returns a string representation of the sensor values from ALMemory
+	@returns a json object (as dict here) of the sensor values from ALMemory + a timestamp
 	'''
 	ids = arr.split("+")
-	result = "<ul>"
+	result = dict()
 	for v in ids:
 		value = sensors[int(v)]
-		result += "<li><i>%s</i>: %s</li>" % (value, string(value))
-	result += "</ul><p><i>Response timestamp: </i>%s" % int(time.time())
+		result[value] = string(value)
+	result[timestamp] = "%.6f" % time.time()
 	return result
 	
 # we need libraries for visualization

@@ -120,7 +120,7 @@ function getMultiple(sensors) {
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", "{{multiple}}/"+s, false );
     xmlHttp.send( null );
-    return xmlHttp.responseText + "<br /><i>Query timestamp: </i>" + starttime + "</p>";
+    return xmlHttp.responseText + "<br /><i>Query timestamp: </i>" + starttime;
 }
 
 function checkSensortype(sensortype) {
