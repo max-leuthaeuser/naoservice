@@ -14,7 +14,6 @@ name = 'NaoProxyModule'
 path = '/proxy'
 sub = []
 
-used = False
 lock = Lock()
 bridge = ALProxy("ALPythonBridge", "localhost", 9559)
 
@@ -97,7 +96,7 @@ def run(proxyname="", method="", params=""):
 	
 	@see: NaoSDK ALProxy.evalFull
 	'''		
-	global used
+	
 	proxyname = proxyname.replace(" ", "")
 	if params != "()":
 		params = params.replace('"', '\"')
@@ -109,14 +108,12 @@ def run(proxyname="", method="", params=""):
 		proxy_cache.append(proxyname.lower())
 		new_proxy = "ALProxy('%s', 'localhost', 9559)" % proxyname
 		bridge.eval(proxyname.lower() + "=" + new_proxy)		
-						
-	if used:
+				
+	if lock.locked():
 		l = ALProxy("ALPythonBridge", "localhost", 9559).evalFull(command)
-	else:						
+	else:
 		with lock:
-			used = True
 			l = bridge.evalFull(command)
-			used = False
 	
 	return dict(returnvalue=l[0], exception=l[1], stdout=l[2], stderr=l[3])
 
