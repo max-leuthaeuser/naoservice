@@ -2,6 +2,7 @@
 import threading
 from threading import Lock
 import fileinput
+import base64
 from libs import CppHeaderParser
 import bottle
 from bottle import view, static_file
@@ -85,6 +86,24 @@ def list(proxyname=""):
 	for s in l:
 		result += s["name"] + ","
 	return result[:-1]
+	
+def _handle_binary_data(s):
+	'''
+	Small helper method to convert a string to base64 encoding
+	if needed.
+	
+	@arg s: string to get converted
+	@return: the string in base64 encoding if needed
+	'''
+	try:
+		# try to decode it with utf8
+		# if this is not possible we convert it to base64
+		# e.g. to be able to transfer it with JSON
+		s.decode('utf8')
+	except UnicodeDecodeError:
+		return base64.b64encode(s)
+	else:
+		return s
 
 @app.route('/run/:proxyname/:method/:params#.+#')
 def run(proxyname="", method="", params=""):
@@ -114,8 +133,9 @@ def run(proxyname="", method="", params=""):
 	else:
 		with lock:
 			l = bridge.evalFull(command)
-	
-	return dict(returnvalue=l[0], exception=l[1], stdout=l[2], stderr=l[3])
+			
+	s = _handle_binary_data(l[0])
+	return dict(returnvalue=s, exception=l[1], stdout=l[2], stderr=l[3])
 
 @app.route('/interface/:proxyname/:method')
 def interface(proxyname="", method=""):
