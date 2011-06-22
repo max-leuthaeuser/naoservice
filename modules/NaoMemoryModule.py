@@ -1,4 +1,4 @@
-﻿import bottle
+import bottle
 from bottle import view, static_file
 
 app = bottle.Bottle()

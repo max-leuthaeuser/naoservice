@@ -1,4 +1,4 @@
-﻿from NaoService import NaoService
+from NaoService import NaoService
 from optparse import OptionParser
 
 DEFAULT_HOST = "localhost"

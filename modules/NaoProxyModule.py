@@ -1,5 +1,4 @@
-﻿from __future__ import with_statement
-import threading
+from __future__ import with_statement
 from threading import Lock
 import fileinput
 import base64

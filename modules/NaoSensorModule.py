@@ -1,4 +1,4 @@
-﻿import bottle
+import bottle
 import time
 from bottle import view, static_file
 from naoqi import ALProxy
