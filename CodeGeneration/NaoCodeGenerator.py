@@ -63,7 +63,7 @@ class NaoCodeGenerator:
 			self._mapping[k] = v	
 	
 	@abstractmethod
-	def generateCode(self):
+	def generate_code(self):
 		'''
 		Run the actual code generation. You need to implement this method
 		in your specific code generator which inherits from this class.

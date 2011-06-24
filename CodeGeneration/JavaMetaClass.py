@@ -45,10 +45,8 @@ class JavaMetaClass(AbstractMetaClass):
     def __str__(self):
         doc = "\t/**\n\t" + self._javadoc.replace("///", "*") + "\n\t*/"
         result = doc + "\n"
-        m = ""
-        for s in self._modifier:
-            m += s + " "
-        result += "\t" + m + "class " + self._name + " {\n"
+        m = " ".join(self._modifier)
+        result += "\t" + m + " class " + self._name + " {\n"
         
         # class variables
         for v in self._variables:
@@ -91,10 +89,7 @@ class JavaMetaClass(AbstractMetaClass):
             self._value = value
             
         def __str__(self):
-            m = ""
-            for s in self._modifier:
-                m += s + " "
-            
+            m = " ".join(self._modifier) + " "
             if self._value == "":
                 return "\t" + m + self._name + ";"
             else:
@@ -131,13 +126,8 @@ class JavaMetaClass(AbstractMetaClass):
             return self._name == other._name and self._arguments == other._arguments
             
         def __str__(self):
-            m = ""
-            for s in self._modifier:
-                m += s + " "
-            a = ""
-            for s in self._arguments:
-                a += s + ", "
-            a = a[:-2]
+            m = " ".join(self._modifier) + " "
+            a = ", ".join(self._arguments)
             if self._javadoc != "":
                 # convert doxygen to javadoc
                 doc = self._javadoc.replace("<returns>", "<br /><i>Actual SDK return value:</i>")

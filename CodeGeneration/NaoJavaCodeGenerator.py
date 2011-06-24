@@ -15,7 +15,8 @@ from NaoCodeGenerator import NaoCodeGenerator
 from JavaMetaClass import JavaMetaClass
 from UserString import MutableString
 import fileinput
-import os, sys
+import os
+import sys
 lib_path = os.path.abspath('../modules/libs')
 sys.path.append(lib_path)
 import CppHeaderParser 
@@ -32,8 +33,7 @@ class NaoJavaCodeGenerator(NaoCodeGenerator):
         Returns a list of all available modules.
         '''
         proxies = []
-        for p in fileinput.input(['../modules/data/ALModules.txt']):
-            proxies.append(p[:-1])
+        map(proxies.append, [x[:-1] for x in fileinput.input(['../modules/data/ALModules.txt'])])
         return proxies
     
     def _get_methods(self, module):
@@ -124,7 +124,7 @@ class NaoJavaCodeGenerator(NaoCodeGenerator):
     }
 '''
         
-    def generateCode(self):
+    def generate_code(self):
         result = MutableString()
         
         # imports
@@ -248,6 +248,6 @@ print "starting code generation ..."
 cg = NaoJavaCodeGenerator(imports)
 cg.read_mapping("tojava.map")
 f = open('Nao.java', 'w')
-f.write(str(cg.generateCode()))
+f.write(str(cg.generate_code()))
 f.close()
 print "finished"

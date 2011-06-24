@@ -19,8 +19,7 @@ bridge = ALProxy("ALPythonBridge", "localhost", 9559)
 
 # Read all available proxies once
 proxies = []
-for p in fileinput.input(['modules/data/ALModules.txt']):
-	proxies.append(p[:-1])
+map(proxies.append, [x[:-1] for x in fileinput.input(['modules/data/ALModules.txt'])])
 	
 # we save all used proxies to
 # create them lazy
@@ -114,7 +113,6 @@ def run(proxyname="", method="", params=""):
 	
 	@see: NaoSDK ALProxy.evalFull
 	'''		
-	
 	proxyname = proxyname.replace(" ", "")
 	if params != "()":
 		params = params.replace('"', '\"')

@@ -16,8 +16,7 @@ memProxy = ALProxy("ALMemory", "localhost", 9559)
 # Read all available sensor values once
 # using the ALMemory from the ALProxy.
 sensors = []
-for line in memProxy.getDataListName():
-	sensors.append(line)
+map(sensors.append, memProxy.getDataListName())
 
 # this are all available diagram representation types
 types = ["area", "areaspline", "bar", "column", "line", "scatter", "spline"]
