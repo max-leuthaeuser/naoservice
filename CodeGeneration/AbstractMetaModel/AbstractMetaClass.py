@@ -68,7 +68,7 @@ class AbstractMetaClass(NamedElement):
         def methods(self, methods):
             '''
             Set a list of methods.
-            @param variables: list of methods
+            @param methods: list of methods
             
             @return: self (see builder pattern)
             @raise ValueError: if the provided param is None 
