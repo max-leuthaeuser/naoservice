@@ -14,11 +14,10 @@
 
 	<div id="wrapper" class="clearfix">
 		<div id="maincol">
+			<h3>Input</h3>
 			<p>
 			<div id="interface">
-				<div id="input">
-				
-				</div>
+				<div id="input"></div>
 				<input type="button" name="intButton" value="Run" id="runButton"/>	
 			</div>
 			<div id="result" style="font-style:bold;"></div>
@@ -31,7 +30,7 @@
 				<p>
 					<label>Module name:</label><br />
 					<input id="autocomplete_proxy" type='text' /><br />
-					<input type="button" name="intButton" value="Toggle help for this module" id="helpButton"/><br />
+					<input type="button" name="intButton" value="Toggle help" id="helpButton"/><br />
 					<input type="button" name="intButton" value="OK" id="proxyButton"/>	
 				</p>
 			</div>
@@ -140,7 +139,7 @@ function drawHelp() {
 	document.getElementById("error").innerHTML = ""
 	var proxyname = $("#autocomplete_proxy").val();
 	if (proxyname != "") {
-		document.getElementById("help").innerHTML = getMethodListHtml(proxyname);
+		document.getElementById("help").innerHTML = "<br />" + getMethodListHtml(proxyname);
 	} else {
 		document.getElementById("error").innerHTML = "You need to choose a module name!";
 	}

@@ -19,9 +19,9 @@ html, body{
 } 
  
 #leftcol{
- width:30%; 
+ width:25%; 
  float:left; 
- position:relative;
+ position:absolute;
 }
 
 #leftcol #autocomplete_sensor{
@@ -31,9 +31,9 @@ html, body{
 #maincol{
  background-color: #DDDDDF;  
  position: relative; 
- width:68%;
+ width:70%;
  float:right; 
- margin-left: 10px; 
+ margin-left: 5px; 
  padding-top: 0px; 
  padding-left: 5px; 
  padding-right: 5px; 
