@@ -2,6 +2,7 @@ html, body{
  margin:0; 
  padding:0; 
  text-align:center; 
+ background-color:#EFEFEF;
 } 
  
 #pagewidth{ 
@@ -12,7 +13,6 @@ html, body{
  
 #header{
  position:relative; 
- background-color:#FFFFFF; 
  width:100%;
  display:block;
  overflow:auto;
@@ -29,7 +29,7 @@ html, body{
 }
  
 #maincol{
- background-color: #DDDDDF;  
+ background-color: #FFFFFF;  
  position: relative; 
  width:70%;
  float:right; 
@@ -37,28 +37,49 @@ html, body{
  padding-top: 0px; 
  padding-left: 5px; 
  padding-right: 5px; 
- padding-bottom: 5px; 
+ padding-bottom: 5px;
+ border:1px solid #DDDDDF;
+ -moz-border-radius:5px; /* Firefox */
+ -webkit-border-radius:5px; /* Safari, Chrome */
+ -khtml-border-radius:5px; /* Konqueror */
+ border-radius:5px; /* CSS3 */
 }
 
 #maincol h3{
  margin: 0;
  padding: 0;
 }
+
+#optionset h3{
+ margin: 0;
+ padding: 0;
+}
  
 #optionset{
- background-color: #DDDDDF; 
+ background-color: #FFFFFF; 
  padding-top: 0px; 
  padding-left: 5px; 
  padding-right: 5px; 
  padding-bottom: 5px; 
+ margin-bottom: 10px;
+ border:1px solid #DDDDDF;
+ -moz-border-radius:5px; /* Firefox */
+ -webkit-border-radius:5px; /* Safari, Chrome */
+ -khtml-border-radius:5px; /* Konqueror */
+ border-radius:5px; /* CSS3 */
 }
 
 #error{
  color: red; 
- background-color: #DDDDDF; 
+ background-color: #FFFFFF; 
  padding-top: 0px; 
  padding-left: 5px; 
  padding-right: 5px; 
+ border:1px solid #DDDDDF;
+ -moz-border-radius:5px; /* Firefox */
+ -webkit-border-radius:5px; /* Safari, Chrome */
+ -khtml-border-radius:5px; /* Konqueror */
+ border-radius:5px; /* CSS3 */
 }
 
 .clearfix:after {
