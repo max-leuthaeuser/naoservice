@@ -131,7 +131,7 @@ def run(proxyname="", method="", params=""):
 		with lock:
 			l = bridge.evalFull(command)
 			
-	s = _handle_binary_data(l[0])
+	s = _handle_binary_data(str(l[0]))
 	return dict(returnvalue=s, exception=l[1], stdout=l[2], stderr=l[3])
 
 @app.route('/interface/:proxyname/:method')
