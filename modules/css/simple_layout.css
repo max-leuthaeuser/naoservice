@@ -104,7 +104,7 @@ html, body{
 }
 
 ul.tabs {
-	margin: 0;
+	margin: 0 0 0 5px;
 	padding: 0;
 	float: left;
 	list-style: none;
@@ -120,7 +120,12 @@ ul.tabs li {
 	/*margin-bottom: -1px; /*--Pull the list item down 1px--*/
 	overflow: hidden;
 	position: relative;
-	background: #fff;
+	background-color: #EFEFEF;  
+	border:1px solid #DDDDDF;
+	-moz-border-radius:5px; /* Firefox */
+	-webkit-border-radius:5px; /* Safari, Chrome */
+	-khtml-border-radius:5px; /* Konqueror */
+	border-radius:5px; /* CSS3 */
 }
 ul.tabs li a {
 	text-decoration: none;
@@ -130,17 +135,16 @@ ul.tabs li a {
 	outline: none;
 }
 ul.tabs li a:hover {
-	background: #fff;
+	background: #FFFFFF;
 }
 html ul.tabs li.active, html ul.tabs li.active a:hover  {
-	background: #DDDDDF;
+	background: #FFFFFF;
 }
 
 .tab_container {
 	overflow: hidden;
 	clear: both;
 	float: left; width: 100%;
-	background: #DDDDDF;
 }
 .tab_content {
 	padding: 5px;
