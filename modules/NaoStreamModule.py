@@ -30,6 +30,10 @@ cam_id = ""
 @view('ref_list')
 def index():
 	return dict(name=name, path=path, subs=sub)
+	
+@app.route('/header.jpg')
+def send_header_image():
+	return static_file('header.jpg', root='./modules/data')
 
 def unsubscribe():
 	cam_proxy.unsubscribe(name)

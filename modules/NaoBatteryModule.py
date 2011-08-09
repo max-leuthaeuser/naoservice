@@ -17,6 +17,14 @@ memProxy = ALProxy("ALMemory", "localhost", 9559)
 @view('ref_list')
 def index():
 	return dict(name=name, path=path, subs=sub)
+	
+@app.route('/header.jpg')
+def send_header_image():
+	return static_file('header.jpg', root='./modules/data')
+	
+@app.route('/simple_layout.css')
+def send_static_css_layout():
+	return static_file('simple_layout.css', root='./modules/css')
 
 # we need libraries for visualization
 # so we have to serve them statically

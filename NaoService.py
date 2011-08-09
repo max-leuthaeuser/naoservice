@@ -15,7 +15,7 @@ __license__ = 'GPL'
 import sys
 import bottle
 from naoqi import ALProxy
-from bottle import mount, route #@UnresolvedImport
+from bottle import mount, route, static_file #@UnresolvedImport
 from bottle import run, view
 
 module_list = []
@@ -25,6 +25,14 @@ module_list = []
 @view('index_list')
 def index():
 	return dict(modules=module_list)
+	
+@route('/header.jpg')
+def send_header_image():
+	return static_file('header.jpg', root='modules/data')
+	
+@route('/simple_layout.css')
+def send_static_css_layout():
+	return static_file('simple_layout.css', root='modules/css')
 
 class NaoService:
 	class Module:

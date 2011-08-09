@@ -69,6 +69,43 @@ html, body{
  border-radius:5px; /* CSS3 */
 }
 
+#index_main{
+ position:relative;
+ height:320px;
+ width:400px;
+ margin:0 0px 0px -200px;
+ top: 63%;
+ left: 50%;
+ text-align: left;
+ background-color: #FFFFFF; 
+ padding-top: 0px; 
+ padding-left: 15px; 
+ padding-right: 5px; 
+ padding-bottom: 5px; 
+ margin-bottom: 10px;
+ border:1px solid #DDDDDF;
+ -moz-border-radius:5px; /* Firefox */
+ -webkit-border-radius:5px; /* Safari, Chrome */
+ -khtml-border-radius:5px; /* Konqueror */
+ border-radius:5px; /* CSS3 */
+}
+
+#index_header{
+ background-color: #FFFFFF;
+ height: 80px;
+ left: 50%;
+ margin: 10px 0 10px -200px;
+ padding: 0 5px 5px 15px;
+ position: relative;
+ text-align: left;
+ width: 400px;
+ border: 1px solid #DDDDDF;
+ -moz-border-radius:5px; /* Firefox */
+ -webkit-border-radius:5px; /* Safari, Chrome */
+ -khtml-border-radius:5px; /* Konqueror */
+ border-radius:5px; /* CSS3 */
+}
+
 #error{
  color: red; 
  background-color: #FFFFFF; 

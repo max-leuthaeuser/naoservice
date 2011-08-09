@@ -44,7 +44,6 @@ def main():
 	# add all modules you want to use
 	service.add_module('NaoSensorModule')
 	service.add_module('NaoBatteryModule')
-	service.add_module('NaoMemoryModule')
 	service.add_module('NaoProxyModule')
 	service.add_module('NaoStreamModule')
 	# and run the service now
