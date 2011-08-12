@@ -69,7 +69,7 @@ def image_stream(interval=1000): # interval in ms
 	i = int(interval) / 1000
 	while(1):
 		try:
-			yield image_latest("0")
+			yield image_latest("1")
 			# image separator
 			yield "#"
 			time.sleep(i)
