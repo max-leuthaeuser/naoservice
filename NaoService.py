@@ -14,7 +14,6 @@ __license__ = 'GPL'
 
 import sys
 import bottle
-from naoqi import ALProxy
 from bottle import mount, route, static_file #@UnresolvedImport
 from bottle import run, view
 
@@ -87,7 +86,7 @@ class NaoService:
 			else:
 				run(host=self._host, port=self._port, server=self._server, reloader=self._develop)
 		except KeyboardInterrupt:
-			print "Running shutdown callbacks..."
+			print "Running shutdown hooks..."
 			self.run_shutdown_hooks()
 			print "Terminated."
 			sys.exit(0)
