@@ -18,7 +18,7 @@ name = 'NaoStreamModule'
 path = '/stream'
 sub = ['/image_stream/1000', '/image_latest/1', '/image_stream_gui']
 
-cam_proxy = ALProxy("ALVideoDevice", "localhost", 9559)
+cam_proxy = None
 # Register a Generic Video Module (G.V.M.) to the V.I.M.
 resolution = vision_definitions.kQVGA  # 320 * 240
 colorSpace = vision_definitions.kRGBColorSpace
@@ -80,6 +80,9 @@ def image_stream(interval=1000): # interval in ms
 @app.get('/image_latest/:camera')
 def image_latest(camera):
 	global cam_id
+	global cam_proxy
+	# we only register if this was not already done
+	cam_proxy = ALProxy("ALVideoDevice", "localhost", 9559)	
 	# we only subscribe if this was not already done
 	if cam_id == "":
 		cam_id = cam_proxy.subscribe(name, resolution, colorSpace, 5)

@@ -102,13 +102,13 @@ class JavaNaoCodeGenerator(NaoCodeGenerator):
         '''
         # some variables
         doc = "/** The IP address of the Nao. */"
-        c_ip = JavaVariable("ip", 
+        c_ip = JavaVariable("ip",
                             JavaTypes.STRING,
                             modifier=[JavaModifier.PRIVATE, JavaModifier.FINAL],
                             javadoc=doc)
         
         doc = "/** The port where the Nao service is running. */"
-        c_port = JavaVariable("port", 
+        c_port = JavaVariable("port",
                             JavaTypes.INT,
                             modifier=[JavaModifier.PRIVATE, JavaModifier.FINAL],
                             javadoc=doc)
@@ -210,7 +210,6 @@ class JavaNaoCodeGenerator(NaoCodeGenerator):
             else:
                 body = 'return requestAction("%s/%s/"%s);' % (opt, m["name"], a)
             # we replace wrongly placed '+' from the body
-            body = body.replace('/"+"+\'"', '/"+"\'"')
             body = body.replace('/"+","', '/"')
         else:
             if opt == "":
@@ -253,11 +252,8 @@ class JavaNaoCodeGenerator(NaoCodeGenerator):
             '''
             result = ""
             for a in args:
-                type = self.translate(a["type"])
-                if type.find("String") > -1:
-                    result += "+\"+'\"+" + a["name"].lower() + "+\"'\""                    
-                else:
-                    result += "+\",\"+" + a["name"].lower()
+                result += "+\",\"+" + a["name"].lower()
+                    
             return result
         
     def generate_code(self):
