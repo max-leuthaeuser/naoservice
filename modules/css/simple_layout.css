@@ -186,3 +186,21 @@ html ul.tabs li.active, html ul.tabs li.active a:hover  {
 .tab_content {
 	padding: 5px;
 }
+
+/* Container class */
+div.rounded_container{
+        /* This background color should have the same background color as your text input */
+        /* Changing this color will show you how the rounded input is laid out */
+        background-color: #fff;
+        /* This padding is between the text input and the rounded border on all sides */
+        /* Decreasing the value may interfere with the rounded corners */
+        padding: 4px;
+}
+/* Border class */		
+div.rounded_border {  
+	/* This is the color of your rounded border */
+	background: #DDDDDF; 
+}
+input.rounded_input{
+	border:0;
+}

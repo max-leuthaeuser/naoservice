@@ -1,22 +1,16 @@
-import sys
-sys.path.append('modules/libs/gevent')
-sys.path.append('modules/libs/greenlet')
-from gevent import monkey; monkey.patch_all()
-
 import StringIO
 import bottle
-import time
 import base64
 import vision_definitions
 from PIL import Image
-from bottle import view, get, static_file #@UnresolvedImport
+from bottle import view, static_file
 from naoqi import ALProxy
 
 app = bottle.Bottle()
 
 name = 'NaoStreamModule'
 path = '/stream'
-sub = ['/image_stream/1000', '/image_latest/1', '/image_stream_gui']
+sub = ['/image_latest/1', '/image_stream_gui']
 
 cam_proxy = None
 # Register a Generic Video Module (G.V.M.) to the V.I.M.
@@ -36,7 +30,8 @@ def send_header_image():
 	return static_file('header.jpg', root='./modules/data')
 
 def unsubscribe():
-	cam_proxy.unsubscribe(name)
+	if cam_proxy:
+		cam_proxy.unsubscribe(name)
 
 shutdown_hook = unsubscribe
 
@@ -61,21 +56,21 @@ def _handle_binary_data(s):
 @app.route('/image_stream_gui')
 @view('image_stream')
 def image_stream_gui():
-	return dict(path="http://192.168.0.139:8070/stream/image_latest")
-	# return dict(path="http://localhost:8080/stream/image_latest")
+	#return dict(path="http://192.168.0.139:8070/stream/image_latest")
+	return dict(path="http://localhost:8080/stream/image_latest")
 
-@app.route('/image_stream/:interval')
 def image_stream(interval=1000): # interval in ms
-	i = int(interval) / 1000
-	while(1):
-		try:
-			yield image_latest("1")
+	raise DeprecationWarning("Do not use this method. Use image_latest instead!")
+	# i = int(interval) / 1000
+	# while(1):
+		# try:
+			# yield image_latest("1")
 			# image separator
-			yield "#"
-			time.sleep(i)
-		except:
-			print "streaming client is gone..."
-			break
+			# yield "#"
+			# time.sleep(i)
+		# except:
+			# print "streaming client is gone..."
+			# break
 		
 @app.get('/image_latest/:camera')
 def image_latest(camera):
@@ -106,7 +101,7 @@ def image_latest(camera):
 	return _handle_binary_data(f.getvalue())
 	
 #	for testing with webcam locally
-#	cam = Device(devnum=0)
+#	cam = Device()
 #	cam.setResolution(320, 240)
 #	print "Taking image"
 #	im = cam.getImage()
