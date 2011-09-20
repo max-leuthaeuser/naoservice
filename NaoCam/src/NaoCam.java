@@ -9,18 +9,20 @@ import javax.swing.UIManager;
  */
 public class NaoCam {
 	private static String SERVER_IP = "http://192.168.0.139:8070";
+	//private static final String SERVER_IP = "http://localhost:8080";
 	public static String STREAM_LOCATION = SERVER_IP + "/stream/image_latest/1";
 
 	/**
 	 * Setup and start the GUI inside the AWT event dispatching thread.
 	 * 
 	 * @param args
-	 *            server IP, if not specified here the standard IP will be chosen.
+	 *            stream location, if not specified here the standard location
+	 *            will be chosen.
 	 * @see SERVER_IP
 	 */
 	public static void main(String[] args) {
 		if (args.length > 0) {
-			SERVER_IP = args[0];
+			STREAM_LOCATION = args[0];
 		}
 		System.out.println("Stream location will be: " + STREAM_LOCATION);
 		SwingUtilities.invokeLater(new Runnable() {

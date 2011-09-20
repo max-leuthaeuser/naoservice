@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
 import javax.swing.SwingUtilities;
 
 /**
@@ -27,7 +28,7 @@ public class NaoCamModel {
 
 	public NaoCamModel() {
 		try {
-			requestUrl = new URL(NaoCam.STREAM_LOCATION + "/" + interval);
+			requestUrl = new URL(NaoCam.STREAM_LOCATION);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -75,8 +76,8 @@ public class NaoCamModel {
 			responseReader = new BufferedReader(new InputStreamReader(
 					response.getInputStream()));
 		} catch (IOException e) {
-			NaoCamView
-					.showErrorMessage("Can not read data from the web service.");
+			NaoCamView.showErrorMessage("Can not connect to the web service.");
+			e.printStackTrace();
 			stopRequested = true;
 		}
 	}
