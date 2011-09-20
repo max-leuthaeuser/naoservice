@@ -7,10 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -78,13 +74,9 @@ public final class NaoCamView extends JFrame implements ActionListener,
 		setVisible(true);
 	}
 
-	public void drawImage(byte[] b) {
-		try {
-			buffer = ImageIO.read(new ByteArrayInputStream(b));
-			image.repaint();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void drawImage(Image b) {
+		buffer = b;
+		image.repaint();
 	}
 
 	/**

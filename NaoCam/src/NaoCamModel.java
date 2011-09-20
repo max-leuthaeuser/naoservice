@@ -1,11 +1,8 @@
-import java.awt.Graphics2D;
-import java.io.BufferedReader;
+import java.awt.Image;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-
+import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
 /**
@@ -23,8 +20,6 @@ public class NaoCamModel {
 	private volatile boolean stopRequested = false;
 
 	private URL requestUrl;
-	private URLConnection response;
-	private BufferedReader responseReader;
 
 	public NaoCamModel() {
 		try {
@@ -40,12 +35,11 @@ public class NaoCamModel {
 	public void startCam() {
 		System.out.println("starting...");
 		stopRequested = false;
-		openConnection();
 		Thread worker = new Thread() {
 			public void run() {
 				while (!stopRequested) {
 					// this could take a while
-					final byte[] r = queryImage();
+					final Image r = queryImage();
 					if (r == null) {
 						stopRequested = true;
 						System.err
@@ -70,44 +64,15 @@ public class NaoCamModel {
 		worker.start();
 	}
 
-	private void openConnection() {
-		try {
-			response = requestUrl.openConnection();
-			responseReader = new BufferedReader(new InputStreamReader(
-					response.getInputStream()));
-		} catch (IOException e) {
-			NaoCamView.showErrorMessage("Can not connect to the web service.");
-			e.printStackTrace();
-			stopRequested = true;
-		}
-	}
-
-	private void closeConnection() {
-		try {
-			if (responseReader != null)
-				responseReader.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Internal helper method to call the web service, retrieve the image and
 	 * draw it.
 	 */
-	private byte[] queryImage() {
-		StringBuilder sb = new StringBuilder();
-		int cp;
+	private Image queryImage() {
 		try {
-			while (!stopRequested && (cp = responseReader.read()) != -1) {
-				sb.append((char) cp);
-			}
-			if (!stopRequested)
-				return base64ToImage(sb.toString());
+			return ImageIO.read(requestUrl);
 		} catch (IOException e) {
-			NaoCamView
-					.showErrorMessage("IOException while reading an image from the web service.");
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -119,7 +84,6 @@ public class NaoCamModel {
 	public void stopCam() {
 		System.out.println("stopped!");
 		stopRequested = true;
-		closeConnection();
 	}
 
 	/**
@@ -131,17 +95,5 @@ public class NaoCamModel {
 	public void changeInterval(final int interval) {
 		this.interval = interval;
 		System.out.println("Interval changed: " + interval);
-	}
-
-	/**
-	 * Internal helper method to convert a base64 encoded string back to an
-	 * {@link Graphics2D} as image.
-	 * 
-	 * @param s
-	 *            a base64 encoded String from an image
-	 * @return a byte array decoded from the String s
-	 */
-	private byte[] base64ToImage(final String s) {
-		return Base64.decodeFast(s);
 	}
 }
