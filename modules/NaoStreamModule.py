@@ -5,7 +5,6 @@ import vision_definitions
 from PIL import Image
 from bottle import view, static_file
 from naoqi import ALProxy
-from VideoCapture import Device
 
 app = bottle.Bottle()
 
