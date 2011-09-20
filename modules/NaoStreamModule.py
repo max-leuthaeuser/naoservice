@@ -5,6 +5,7 @@ import vision_definitions
 from PIL import Image
 from bottle import view, static_file
 from naoqi import ALProxy
+from VideoCapture import Device
 
 app = bottle.Bottle()
 
@@ -56,8 +57,8 @@ def _handle_binary_data(s):
 @app.route('/image_stream_gui')
 @view('image_stream')
 def image_stream_gui():
-	#return dict(path="http://192.168.0.139:8070/stream/image_latest")
-	return dict(path="http://localhost:8080/stream/image_latest")
+	return dict(path="http://192.168.0.139:8070/stream/image_latest")
+	#return dict(path="http://localhost:8080/stream/image_latest")
 
 def image_stream(interval=1000): # interval in ms
 	raise DeprecationWarning("Do not use this method. Use image_latest instead!")
@@ -101,10 +102,11 @@ def image_latest(camera):
 	return _handle_binary_data(f.getvalue())
 	
 #	for testing with webcam locally
-#	cam = Device()
+#	cam = Device(devnum=2)
 #	cam.setResolution(320, 240)
 #	print "Taking image"
 #	im = cam.getImage()
+#	im = Image.open(fp="test.jpg")
 #	print "sending to client"
 #	f = StringIO.StringIO()
 #	im.save(f, "JPEG", quality=20)
