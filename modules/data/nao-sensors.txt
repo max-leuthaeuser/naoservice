@@ -49,7 +49,7 @@ Device/DeviceList/Chest-Eeprom/Nack
 Device/DeviceList/Chest-Eeprom/Type
 Device/DeviceList/ChestBoard/Ack
 Device/DeviceList/ChestBoard/Address
-Device/DeviceList/ChestBoard/BodyId
+Device/DeviceList/ChestBoard/BodyId
 Device/DeviceList/ChestBoard/BodyNickName
 Device/DeviceList/ChestBoard/Bus
 Device/DeviceList/ChestBoard/ChainResult

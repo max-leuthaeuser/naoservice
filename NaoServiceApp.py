@@ -46,6 +46,7 @@ def main():
 	service.add_module('NaoBatteryModule')
 	service.add_module('NaoProxyModule')
 	service.add_module('NaoStreamModule')
+	service.add_module('NaoProfilingModule')
 	# and run the service now
 	service.start()
 
