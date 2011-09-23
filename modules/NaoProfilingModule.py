@@ -25,7 +25,7 @@ def start(interval=100, sensor=""):
 	'''
 	@param interval: in ms
 	@param sensor: the sensor you want to use for profiling
-	@return: an unique ID for your profiling process. Use this ID stop
+	@return: an unique ID for your profiling process. Use this ID to stop
 		the profiling using method 'stop'
 	'''
 	p_id = str(uuid.uuid4())
