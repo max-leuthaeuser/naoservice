@@ -33,7 +33,7 @@ def start(interval=100, sensor=""):
 	def profile(args):
 		pointer = args['pointer']
 		sensor_value = args['sensor_values'] 
-		pointer.append({'timestamp':"%.6f" % time.time(), 'value':memProxy.getData(sensor_value)})
+		pointer.append({'timestamp':"%.6f" % time.time(), 'value':str(memProxy.getData(sensor_value))})
 	worker = StoppableWorker(profile, {'pointer':list, 'sensor_values':sensor}, int(interval))
 	processes[p_id] = (worker, list)
 	worker.start()	
