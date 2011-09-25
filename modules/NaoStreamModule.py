@@ -77,7 +77,8 @@ def image_latest(camera):
 	global cam_id
 	global cam_proxy
 	# we only register if this was not already done
-	cam_proxy = ALProxy("ALVideoDevice", "localhost", 9559)	
+	if cam_proxy == None:
+		cam_proxy = ALProxy("ALVideoDevice", "localhost", 9559)	
 	# we only subscribe if this was not already done
 	if cam_id == "":
 		cam_id = cam_proxy.subscribe(name, resolution, colorSpace, 5)
