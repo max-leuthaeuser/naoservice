@@ -56,8 +56,8 @@ def _handle_binary_data(s):
 @app.route('/image_stream_gui')
 @view('image_stream')
 def image_stream_gui():
-	return dict(path="http://192.168.0.139:8070/stream/image_latest")
-	#return dict(path="http://localhost:8080/stream/image_latest")
+	#return dict(path="http://192.168.0.139:8070/stream/image_latest")
+	return dict(path="http://localhost:8080/stream/image_latest")
 
 def image_stream(interval=1000): # interval in ms
 	raise DeprecationWarning("Do not use this method. Use image_latest instead!")
@@ -71,20 +71,23 @@ def image_stream(interval=1000): # interval in ms
 		# except:
 			# print "streaming client is gone..."
 			# break
-		
+
+cam = Device(devnum=0)
+cam.setResolution(320, 240)
+
 @app.get('/image_latest/:camera')
 def image_latest(camera):
 	global cam_id
 	global cam_proxy
 	# we only register if this was not already done
 	if cam_proxy == None:
-		cam_proxy = ALProxy("ALVideoDevice", "localhost", 9559)	
+		cam_proxy = ALProxy("ALVideoDevice", "localhost", 9559)
+		# setting the camera device
+		# id = 0 means top camera, id = 1 bottom camera
+		cam_proxy.setParam(vision_definitions.kCameraSelectID, int(camera) - 1)	
 	# we only subscribe if this was not already done
 	if cam_id == "":
 		cam_id = cam_proxy.subscribe(name, resolution, colorSpace, 5)
-	# setting the camera device
-	# id = 0 means top camera, id = 1 bottom camera
-	cam_proxy.setParam(vision_definitions.kCameraSelectID, int(camera) - 1)
 	# image is an array containing image information:
 	# [0] : width;
 	# [1] : height;
@@ -98,20 +101,14 @@ def image_latest(camera):
 	# Create a PIL Image from the pixel array:
 	im = Image.fromstring("RGB", (image[0], image[1]), image[6])
 	f = StringIO.StringIO()
-	im.save(f, "JPEG", quality=20)
+	im.save(f, "JPEG", quality=25)
 	return _handle_binary_data(f.getvalue())
-	
-#	for testing with webcam locally
-#	cam = Device(devnum=2)
-#	cam.setResolution(320, 240)
-#	print "Taking image"
+
 #	im = cam.getImage()
-#	im = Image.open(fp="test.jpg")
-#	print "sending to client"
 #	f = StringIO.StringIO()
 #	im.save(f, "JPEG", quality=20)
 #	return _handle_binary_data(f.getvalue())
-	
+
 # we need libraries for visualization
 # so we have to serve them statically
 @app.route('/jquery.min.js')
