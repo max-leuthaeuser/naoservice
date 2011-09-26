@@ -1,7 +1,13 @@
 import java.awt.Image;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
@@ -70,10 +76,26 @@ public class NaoCamModel {
 	 */
 	private Image queryImage() {
 		try {
-			return ImageIO.read(requestUrl);
+			final HttpURLConnection connection = (HttpURLConnection) requestUrl
+					.openConnection();
+
+			connection.setRequestMethod("GET");
+			connection.connect();
+			try {
+				final InputStream is = connection.getInputStream();
+				final Reader reader = new InputStreamReader(is);
+				final char[] buf = new char[16384];
+				int read;
+				final StringBuffer sb = new StringBuffer();
+				while ((read = reader.read(buf)) > 0) {
+					sb.append(buf, 0, read);
+				}
+				byte[] i = Base64.decode(sb.toString());
+				return ImageIO.read(new ByteArrayInputStream(i));
+			} finally {
+				connection.disconnect();
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return null;
 	}

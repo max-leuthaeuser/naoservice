@@ -9,7 +9,6 @@ import javax.swing.UIManager;
  */
 public class NaoCam {
 	private static String SERVER_IP = "http://192.168.0.139:8070";
-	//private static final String SERVER_IP = "http://localhost:8080";
 	public static String STREAM_LOCATION = SERVER_IP + "/stream/image_latest/1";
 
 	/**
