@@ -1,5 +1,5 @@
 try {
-    String a = action.replaceAll(" ", "%20");
+    String a = forURL(action);
 
     URL request = new URL("http://" + ip + ":" + port
             + "/proxy/run/" + a);

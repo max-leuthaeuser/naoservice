@@ -29,7 +29,9 @@ class JavaNaoCodeGenerator(NaoCodeGenerator):
     NAO_CLASS_DOC = PATH + "naoclassdoc.rsc"
     LICENSE_HEADER = PATH + "license_header.rsc"
     REQUEST_BODY = PATH + "requestbody.rsc"
-    REQUEST_DOC = PATH + "requestdoc.rsc" 
+    REQUEST_DOC = PATH + "requestdoc.rsc"
+    QUOTE_BODY = PATH + "quotebody.rsc"
+    QUOTE_DOC = PATH + "quotedoc.rsc" 	
     
     def __init__(self, mapping_path=None, import_path=None):
         super(JavaNaoCodeGenerator, self).__init__(mapping_path=mapping_path)
@@ -130,7 +132,7 @@ class JavaNaoCodeGenerator(NaoCodeGenerator):
                                  arguments=[arg_ip, arg_port])
         
         # methods
-        ms = [constructor, self._build_request_method()]
+        ms = [constructor, self._build_request_method(), self._build_quote_method()]
         classname = "\"+this.getClass().getSimpleName()+\""
         for m in CppHeaderHelper.get_methods("ALModule"):
                 ms.append(self._build_module_method("ALModule", m, opt=classname))
@@ -241,6 +243,23 @@ class JavaNaoCodeGenerator(NaoCodeGenerator):
                              returntype,
                              modifier=[JavaModifier.PROTECTED], arguments=[arg],
                              javadoc=doc)
+
+    def _build_quote_method(self):
+        '''
+        Internal helper method.
+        
+        @return: a JavaMethod which represents the quote method for the 
+        Nao abstraction layer which prepares URL strings.
+        '''
+        doc = self.read_from_file(self.QUOTE_DOC)
+        returntype = JavaTypes.STRING
+        body = self.read_from_file(self.QUOTE_BODY)
+        arg = JavaVariable("aURLFragment", JavaTypes.STRING, modifier=[JavaModifier.PROTECTED])
+        return JavaMethod("forURL",
+                             body,
+                             returntype,
+                             modifier=[JavaModifier.PROTECTED], arguments=[arg],
+                             javadoc=doc)							 
     
     def _arguments_to_string(self, args):
             '''
