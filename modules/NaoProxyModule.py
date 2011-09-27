@@ -113,7 +113,8 @@ def run(proxyname="", method="", params=""):
 	threadsafe implementation
 	
 	@see: NaoSDK ALProxy.evalFull
-	'''		
+	'''
+	
 	proxyname = proxyname.replace(" ", "")
 	if params != "()":
 		params = urllib.unquote(params)

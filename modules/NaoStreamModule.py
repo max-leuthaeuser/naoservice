@@ -72,8 +72,8 @@ def image_stream(interval=1000): # interval in ms
 			# print "streaming client is gone..."
 			# break
 
-cam = Device(devnum=0)
-cam.setResolution(320, 240)
+#cam = Device(devnum=0)
+#cam.setResolution(320, 240)
 
 @app.get('/image_latest/:camera')
 def image_latest(camera):

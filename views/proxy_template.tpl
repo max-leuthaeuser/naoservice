@@ -188,12 +188,12 @@ $("#runButton").click(function() {
 	var n = parseInt(getNumberOfArguments(proxyname, method));
 	
 	for(var x=1; x<=n; x++) {
-		params += = $("#input"+x).val() + ",";
+		params += $("#input"+x).val() + ",";
 	}	
-	if (params != "")
+	if (params != "") {
 		params = params.substring(0, params.length-1);
 		params = quoteUrl(params);
-	else {
+	} else {
 		params = "()"
 	}
 	document.getElementById("result").innerHTML = runCommand(proxyname, method, params);
