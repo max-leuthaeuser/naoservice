@@ -118,6 +118,7 @@ def run(proxyname="", method="", params=""):
 	proxyname = proxyname.replace(" ", "")
 	if params != "()":
 		params = urllib.unquote(params)
+		params = params.replace("'", "\'")
 		params = "(" + params.replace('"', '\"') + ")"
 		
 	command = "%s.%s%s" % (proxyname.lower(), method, params)
