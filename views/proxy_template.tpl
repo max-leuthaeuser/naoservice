@@ -160,6 +160,25 @@ $("#helpButton").click(function() {
 	}
 });
 
+function quoteUrl(url) {
+    safe = '/"';
+	
+    url = encodeURIComponent(url);
+
+    // Unescape characters that were in the safe list
+    toUnencode = [  ];
+    for (var i = safe.length - 1; i >= 0; --i) {
+        var encoded = encodeURIComponent(safe[i]);
+        if (encoded !== safe.charAt(i)) {    // Ignore safe char if it wasn't escaped
+            toUnencode.push(encoded);
+        }
+    }
+
+    url = url.replace(new RegExp(toUnencode.join('|'), 'ig'), decodeURIComponent);
+
+    return url;
+}
+
 $("#runButton").click(function() {
 	// start the method remotely and show return value
 	params = "";
@@ -169,10 +188,11 @@ $("#runButton").click(function() {
 	var n = parseInt(getNumberOfArguments(proxyname, method));
 	
 	for(var x=1; x<=n; x++) {
-		params += $("#input"+x).val().replace(new RegExp(" ", "g"), "&amp") + ",";
+		params += = $("#input"+x).val() + ",";
 	}	
 	if (params != "")
 		params = params.substring(0, params.length-1);
+		params = quoteUrl(params);
 	else {
 		params = "()"
 	}

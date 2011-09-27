@@ -2,6 +2,7 @@ from __future__ import with_statement
 from threading import Lock
 import fileinput
 import base64
+import urllib
 from libs import CppHeaderParser
 import bottle
 from bottle import view, static_file
@@ -115,8 +116,8 @@ def run(proxyname="", method="", params=""):
 	'''		
 	proxyname = proxyname.replace(" ", "")
 	if params != "()":
-		params = params.replace('"', '\"')
-		params = "(" + params.replace("&amp", " ") + ")"
+		params = urllib.unquote(params)
+		params = "(" + params.replace('"', '\"') + ")"
 		
 	command = "%s.%s%s" % (proxyname.lower(), method, params)
 	
