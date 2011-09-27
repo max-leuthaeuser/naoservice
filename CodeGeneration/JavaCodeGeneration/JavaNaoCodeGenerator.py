@@ -254,7 +254,7 @@ class JavaNaoCodeGenerator(NaoCodeGenerator):
         doc = self.read_from_file(self.QUOTE_DOC)
         returntype = JavaTypes.STRING
         body = self.read_from_file(self.QUOTE_BODY)
-        arg = JavaVariable("aURLFragment", JavaTypes.STRING, modifier=[JavaModifier.PROTECTED])
+        arg = JavaVariable("aURLFragment", JavaTypes.STRING, modifier=[JavaModifier.FINAL])
         return JavaMethod("forURL",
                              body,
                              returntype,
