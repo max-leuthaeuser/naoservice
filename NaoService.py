@@ -38,7 +38,9 @@ def send_static_css_layout():
 def check_auth(user, password, required=False):
 	if required:
 		return login_auth != None
-	return hashlib.sha1(user).hexdigest(), hashlib.sha1(password).hexdigest() == login_auth
+	u = hashlib.sha1(user).hexdigest()
+	p = hashlib.sha1(password).hexdigest()
+	return u == login_auth[0] and p == login_auth[1]
 
 class NaoService:
 	class Module:
