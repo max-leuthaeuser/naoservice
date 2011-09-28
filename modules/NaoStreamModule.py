@@ -3,8 +3,9 @@ import bottle
 import base64
 import vision_definitions
 from PIL import Image
-from bottle import view, static_file
+from bottle import view, static_file, auth_basic
 from naoqi import ALProxy
+from NaoService import check_auth
 
 app = bottle.Bottle()
 
@@ -22,6 +23,7 @@ cam_id = ""
 @app.route('/')
 @app.route('/index.html')
 @view('ref_list')
+@auth_basic(check_auth)
 def index():
 	return dict(name=name, path=path, subs=sub)
 	
@@ -55,6 +57,7 @@ def _handle_binary_data(s):
 
 @app.route('/image_stream_gui')
 @view('image_stream')
+@auth_basic(check_auth)
 def image_stream_gui():
 	#return dict(path="http://192.168.0.139:8070/stream/image_latest")
 	return dict(path="http://localhost:8080/stream/image_latest")
@@ -76,6 +79,7 @@ def image_stream(interval=1000): # interval in ms
 #cam.setResolution(320, 240)
 
 @app.get('/image_latest/:camera')
+@auth_basic(check_auth)
 def image_latest(camera):
 	global cam_id
 	global cam_proxy

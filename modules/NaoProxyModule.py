@@ -1,13 +1,14 @@
 from __future__ import with_statement
-from threading import Lock
 import fileinput
 import base64
 import urllib
-from libs import CppHeaderParser
 import bottle
-from bottle import view, static_file
+from threading import Lock
+from libs import CppHeaderParser
+from bottle import view, static_file, auth_basic
 from naoqi import ALProxy
 from modules.libs.CppHeaderToHtml import parseToHtml
+from NaoService import check_auth
 
 app = bottle.Bottle()
 
@@ -29,11 +30,13 @@ proxy_cache = []
 @app.route('/')
 @app.route('/index.html')
 @view('proxy_template')
+@auth_basic(check_auth)
 def index():
 	d = "All available ALModules provided by the NaoSDK are listed here. Select one and choose a method to run directly on the Nao."
 	return dict(module=name, description=d, proxies=proxies, nargs="/proxy/nargs", interface="/proxy/interface", htmllist="/proxy/htmllist", list="/proxy/list", run="/proxy/run")
 
 @app.route('/nargs/:proxyname/:method')
+@auth_basic(check_auth)
 def nargs(proxyname="", method=""):
 	'''
 	Returns the number of arguments a method expects
@@ -52,6 +55,7 @@ def nargs(proxyname="", method=""):
 	return str(len(m["parameters"]))
 
 @app.route('/htmllist/:proxyname')
+@auth_basic(check_auth)
 def htmllist(proxyname=""):
 	'''
 	Returns a html formatted list of all method with their arguments
@@ -65,6 +69,7 @@ def htmllist(proxyname=""):
 		return "<b>This module is not available.</b>"
 	
 @app.route('/list/:proxyname')
+@auth_basic(check_auth)
 def list(proxyname=""):
 	'''
 	Returns a comma separated list as string of all method with their arguments
@@ -105,6 +110,7 @@ def _handle_binary_data(s):
 		return s
 
 @app.route('/run/:proxyname/:method/:params#.+#')
+@auth_basic(check_auth)
 def run(proxyname="", method="", params=""):
 	'''
 	Runs a method with given parameters for a given proxy
@@ -138,6 +144,7 @@ def run(proxyname="", method="", params=""):
 	return dict(returnvalue=s, exception=l[1], stdout=l[2], stderr=l[3])
 
 @app.route('/interface/:proxyname/:method')
+@auth_basic(check_auth)
 def interface(proxyname="", method=""):
 	'''
 	Builds an interface with input form elements

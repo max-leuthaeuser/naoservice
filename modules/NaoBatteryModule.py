@@ -1,6 +1,7 @@
 import bottle
-from bottle import view, static_file
+from bottle import view, static_file, auth_basic
 from naoqi import ALProxy
+from NaoService import check_auth
 
 app = bottle.Bottle()
 
@@ -15,6 +16,7 @@ memProxy = ALProxy("ALMemory", "localhost", 9559)
 @app.route('/')
 @app.route('/index.html')
 @view('ref_list')
+@auth_basic(check_auth)
 def index():
 	return dict(name=name, path=path, subs=sub)
 	
@@ -38,6 +40,7 @@ def send_static_jquery():
 
 @app.route('/chargingRate')
 @view('line_chart_dynamic')
+@auth_basic(check_auth)
 def bat_level_dynamic():
 	d = 'Current charging rate ((CellVoltageMin + CellVoltageMax) * 3 * currentAmparage)'
 	# we use the method 'charging_data()' here (under '/bat/chargingRate/data' see above) for 'values'
@@ -45,6 +48,7 @@ def bat_level_dynamic():
 	return dict(module=name, description=d, values='/bat/chargingRate/data', x_axis='time', y_axis='mW')
 
 @app.route('/chargingRate/data')
+@auth_basic(check_auth)
 def charging_data():
 	voltMin = memProxy.getData("Device/SubDeviceList/Battery/Charge/Sensor/CellVoltageMin")
 	voltMax = memProxy.getData("Device/SubDeviceList/Battery/Charge/Sensor/CellVoltageMax")

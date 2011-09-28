@@ -1542,8 +1542,7 @@ def path_shift(script_name, path_info, shift=1):
     if path_info.endswith('/') and pathlist: new_path_info += '/'
     return new_script_name, new_path_info
 
-
-
+	
 # Decorators
 #TODO: Replace default_app() with app()
 
@@ -1570,13 +1569,14 @@ def auth_basic(check, realm="private", text="Access denied"):
     ''' Callback decorator to require HTTP auth (basic).
         TODO: Add route(check_auth=...) parameter. '''
     def decorator(func):
-      def wrapper(*a, **ka):
-        user, password = request.auth or (None, None)
-        if user is None or not check(user, password):
-          response.headers['WWW-Authenticate'] = 'Basic realm="%s"' % realm
-          return HTTPError(401, text)
-        return func(*a, **ka)
-      return wrapper
+		def wrapper(*a, **ka):
+			if check("", "", required=True):
+				user, password = request.auth or (None, None)
+				if user is None or not check(user, password):
+					response.headers['WWW-Authenticate'] = 'Basic realm="%s"' % realm
+					return HTTPError(401, text)
+			return func(*a, **ka)
+		return wrapper
     return decorator
 
 
@@ -1595,14 +1595,9 @@ url = make_default_app_wrapper('get_url')
 del name
 
 
-
-
-
-
 ###############################################################################
 # Server Adapter ###############################################################
 ###############################################################################
-
 
 class ServerAdapter(object):
     quiet = False

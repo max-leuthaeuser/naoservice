@@ -4,6 +4,8 @@ import time
 import threading
 from naoqi import ALProxy
 from threading import Thread
+from bottle import auth_basic
+from NaoService import check_auth
 
 app = bottle.Bottle()
 
@@ -21,15 +23,17 @@ MULT = 1
 
 @app.route('/')
 @app.route('/index.html')
+@auth_basic(check_auth)
 def index():
 	return "This module has no web interface."
 
 def profile(args):
-		pointer = args['pointer']
-		sensor_value = args['sensor_values'] 
-		pointer.append({'timestamp':"%.6f" % time.time(), 'value':str(memProxy.getData(sensor_value))})
+	pointer = args['pointer']
+	sensor_value = args['sensor_values'] 
+	pointer.append({'timestamp':"%.6f" % time.time(), 'value':str(memProxy.getData(sensor_value))})
 
 @app.route('/start/:interval/:sensor#.+#')
+@auth_basic(check_auth)
 def start(interval=100, sensor=""):
 	'''
 	@param interval: in ms
@@ -57,6 +61,7 @@ def start(interval=100, sensor=""):
 	return p_id
 
 @app.route('/stop/:id')
+@auth_basic(check_auth)
 def stop(id=""):
 	'''
 	@param id: the ID of the profiling job you want to stop 

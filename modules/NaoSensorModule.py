@@ -1,7 +1,8 @@
 import bottle
 import time
-from bottle import view, static_file
+from bottle import view, static_file, auth_basic
 from naoqi import ALProxy
+from NaoService import check_auth
 
 app = bottle.Bottle()
 
@@ -24,11 +25,13 @@ types = ["area", "areaspline", "bar", "column", "line", "scatter", "spline"]
 @app.route('/')
 @app.route('/index.html')
 @view('sensor_template')
+@auth_basic(check_auth)
 def index():
 	d = "All available sensor values provided by ALMemory are listed here. Select one and choose a appropriate graphical representation."
 	return dict(module=name, description=d, values=sensors, types=types, value="/sensor/value", multiple="/sensor/multiple", string="/sensor/string", check="/sensor/check")
 
 @app.route('/check/:sensor#.+#')
+@auth_basic(check_auth)
 def check(sensor=""):
 	'''
 	This functions validates the incoming GET request
@@ -45,6 +48,7 @@ def check(sensor=""):
 		return "ERROR"
 
 @app.route('/value/:sensor#.+#')
+@auth_basic(check_auth)
 def value(sensor=""):
 	'''
 	Takes a sensortype name and returns it value from ALMemory.
@@ -56,6 +60,7 @@ def value(sensor=""):
 	return str(memProxy.getData(sensor))
 
 @app.route('/string/:sensor#.+#')
+@auth_basic(check_auth)
 def string(sensor=""):
 	'''
 	Takes a sensortype name and returns it value from ALMemory.
@@ -71,6 +76,7 @@ def string(sensor=""):
 		return "Unable to find sensor '%s'<br /><p><b>Stacktrace:</b><br /><i>%s</i></p>" % (sensor, e)
 
 @app.route('/multiple/:arr')
+@auth_basic(check_auth)
 def multiple(arr=""):
 	'''
 	Takes a array of sensor names (as ID) and return their values from ALMemory.

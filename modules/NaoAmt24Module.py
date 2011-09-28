@@ -1,6 +1,7 @@
 import bottle
 from modules.libs.WSDLWrapper import AuthWSDLWrapper
-from bottle import view, static_file #@UnresolvedImport
+from bottle import view, static_file, auth_basic
+from NaoService import check_auth
 
 app = bottle.Bottle()
 
@@ -13,10 +14,12 @@ wsdl = None
 @app.route('/')
 @app.route('/index.html')
 @view('amt24')
+@auth_basic(check_auth)
 def index():
 	return dict(path="/amt24/keyword")
 
 @app.route('/keyword/:keyword#.+#')
+@auth_basic(check_auth)
 def keyword(keyword=""):
 #	return "Hello world"
 	global wsdl

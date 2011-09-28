@@ -14,10 +14,12 @@ __license__ = 'GPL'
 
 import sys
 import bottle
+import hashlib
 from bottle import mount, route, static_file #@UnresolvedImport
 from bottle import run, view
 
 module_list = []
+login_auth = None
 
 @route('/')
 @route('/index.html')
@@ -32,6 +34,11 @@ def send_header_image():
 @route('/simple_layout.css')
 def send_static_css_layout():
 	return static_file('simple_layout.css', root='modules/css')
+
+def check_auth(user, password, required=False):
+	if required:
+		return login_auth != None
+	return hashlib.sha1(user).hexdigest(), hashlib.sha1(password).hexdigest() == login_auth
 
 class NaoService:
 	class Module:
@@ -57,12 +64,16 @@ class NaoService:
 		def get_shutdown_hook(self):
 			return self._shutdown_hook
 	
-	def __init__(self, host='localhost', port=8080, server=None, develop=False, debug=False):
+	def __init__(self, host='localhost', port=8080, server=None, login=None, develop=False, debug=False):
 		self._host = host
 		self._port = port
 		self._develop = develop
 		self._debug = debug
 		self._server = server
+		if login != None:
+			user, password = login
+			global login_auth
+			login_auth = hashlib.sha1(user).hexdigest(), hashlib.sha1(password).hexdigest()
 				
 	def add_module(self, module):
 		m = __import__(name="modules." + module, fromlist=['modules'])
