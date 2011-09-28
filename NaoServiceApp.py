@@ -4,7 +4,7 @@ from optparse import OptionParser
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = "8080"
 DEFAULT_SERVER = None
-DEFAULT_LOGIN = "21592d443e0aaae024593813d6edd76a76537c29", "21592d443e0aaae024593813d6edd76a76537c29"
+DEFAULT_LOGIN = "12dea96fec20593566ab75692c9949596833adc9", "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8"
 
 def main():
 	usage = "usage: %prog [options] arg"
