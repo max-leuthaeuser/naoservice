@@ -59,8 +59,7 @@ def _handle_binary_data(s):
 @view('image_stream')
 @auth_basic(check_auth)
 def image_stream_gui():
-	#return dict(path="http://192.168.0.139:8070/stream/image_latest")
-	return dict(path="http://localhost:8080/stream/image_latest")
+	return dict(path="/stream/image_latest")
 
 def image_stream(interval=1000): # interval in ms
 	raise DeprecationWarning("Do not use this method. Use image_latest instead!")
