@@ -7,7 +7,7 @@ License: GPL (see LICENSE.txt for details)
 __author__ = 'Max Leuthaeuser'
 __license__ = 'GPL'
 
-from UserString import MutableString
+from cStringIO import StringIO
 from CodeGeneration.AbstractMetaModel.AbstractMetaClass import AbstractMetaClass
 
 class ClassType:
@@ -95,53 +95,52 @@ class JavaClass(AbstractMetaClass):
         
         javadoc = self._javadoc.replace("\n", "\n" + ident)
         
-        result = MutableString()
+        result = StringIO()
         # javadoc
         if javadoc != "":
-            result += ident + javadoc + "\n"
-        result += ident
+            result.write(ident + javadoc + "\n")
+        result.write(ident)
         
         # modifier
         if self._modifier != []:
             modifier = " ".join(self._modifier)
-            result += modifier + " "
+            result.write(modifier + " ")
         
         # class name
-        result += "class " + self._name
+        result.write("class " + self._name)
         
         # base classes
         if self._base_classes != []:
             if _all_interfaces():
                 interfaces = ", ".join([x._name for x in self._base_classes])
-                result += " implements " + interfaces
+                result.write(" implements " + interfaces)
             else:
-                result += " extends " + _get_first_class()._name
+                result.write(" extends " + _get_first_class()._name)
                 # are there still any interfaces?
                 interfaces = _get_all_interfaces() 
                 if interfaces != []:
                     interf = ", ".join([x._name for x in interfaces])
-                    result += " implements " + interf
+                    result.write(" implements " + interf)
                     
-        result += " {\n"
+        result.write(" {\n")
         
         # class variables
         if self._variables != []:
             for vars in self._variables:
-                result += vars.string_repr(ident_level + 1) + "\n"
-            result += "\n"
+                result.write(vars.string_repr(ident_level + 1) + "\n")
+            result.write("\n")
         
         # inner classes
         if self._inner_classes != []:
             for inner in self._inner_classes:
-                result += inner.string_repr(ident_level + 1) + "\n\n"
-            result += "\n"
+                result.write(inner.string_repr(ident_level + 1) + "\n\n")
+            result.write("\n")
         
         # methods
         if self._methods != []:
-            for methods in self._methods:
-                result += methods.string_repr(ident_level + 1) + "\n\n"
-            result = result[:-1]
-        result += ident + "}"
+			result.write("\n\n".join([methods.string_repr(ident_level + 1) for methods in self._methods]))
+            result.write("\n")
+        result.write(ident + "}")
         
         # finally we are done
         return result

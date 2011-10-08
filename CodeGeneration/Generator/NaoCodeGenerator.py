@@ -10,7 +10,6 @@ __license__ = 'GPL'
 import fileinput
 from abc import ABCMeta
 from abc import abstractmethod
-from UserString import MutableString
 
 class NaoCodeGenerator:
 	'''
@@ -71,9 +70,7 @@ class NaoCodeGenerator:
 			@param list: the list to transform
 			@return: a string object build out of the list 
 			'''
-			result = MutableString()
-			result += "\n".join(list)
-			return str(result)
+			return str("\n".join(list))
 		
 		if path != "" and path is not None:
 			content = []
