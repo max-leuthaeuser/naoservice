@@ -138,9 +138,10 @@ class JavaClass(AbstractMetaClass):
         
         # methods
         if self._methods != []:
-			result.write("\n\n".join([methods.string_repr(ident_level + 1) for methods in self._methods]))
+            result.write("\n\n".join([methods.string_repr(ident_level + 1) for methods in self._methods]))
             result.write("\n")
         result.write(ident + "}")
         
         # finally we are done
-        return result
+        return result.getvalue()
+
