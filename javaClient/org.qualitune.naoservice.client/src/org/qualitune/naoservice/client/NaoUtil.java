@@ -141,7 +141,7 @@ public class NaoUtil {
 	}
 
 	/**
-	 * Returns the values as a {@link String}s for a given {@link Strings} as a
+	 * Returns the values as a {@link String}s for a given {@link String} as a
 	 * sensor identifier.
 	 * 
 	 * @param nao
@@ -508,7 +508,7 @@ public class NaoUtil {
 	 * @param yDistance
 	 *            The distance to be walked to the side (positive means: right,
 	 *            negative means: left) in meters.
-	 * @return
+	 * @return <code>true</code> if method invocation was successful.
 	 */
 	public static boolean walkTo(Nao nao, float xDistance, float yDistance) {
 		if (nao == null)
