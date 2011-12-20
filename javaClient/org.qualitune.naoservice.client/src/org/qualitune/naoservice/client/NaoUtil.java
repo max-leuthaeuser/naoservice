@@ -46,8 +46,8 @@ public class NaoUtil {
 	 * @throws NaoUtilException
 	 *             Thrown, if accessing the summary fails.
 	 */
-	public static String getActuatorSummary(Nao nao) throws NaoUtilException {
-		ALMotion alMotion = nao.createALMotion();
+	public static String getActuatorSummary(NaoData nao) throws NaoUtilException {
+		ALMotion alMotion = Nao.createALMotion(nao.getIP(), nao.getPort());
 
 		try {
 			return alMotion.getSummary().get(JSON_RETURN_VALUE_KEY).toString();
@@ -66,13 +66,13 @@ public class NaoUtil {
 	 *         not stiffness. 1.0 means all motors have full stiffness.
 	 * @throws IllegalArgumentException
 	 */
-	public static float getAvgStiffness(Nao nao) {
+	public static float getAvgStiffness(NaoData nao) {
 
 		if (nao == null)
 			throw new IllegalArgumentException("Argument 'nao' cannot be null.");
 		// no else.
 
-		ALMotion alMotion = nao.createALMotion();
+		ALMotion alMotion = Nao.createALMotion(nao.getIP(), nao.getPort());
 		JSONArray array;
 		float result = 0f;
 
@@ -108,7 +108,7 @@ public class NaoUtil {
 	 * @return The {@link NaoJointInfo}.
 	 * @throws NaoUtilException
 	 */
-	public static NaoJointInfo getJointInfo(Nao nao, NaoJointID id)
+	public static NaoJointInfo getJointInfo(NaoData nao, NaoJointID id)
 			throws NaoUtilException {
 
 		if (nao == null)
@@ -131,7 +131,7 @@ public class NaoUtil {
 	 * @return The {@link NaoJointInfos}.
 	 * @throws NaoUtilException
 	 */
-	public static NaoJointInfos getJointInfos(Nao nao) throws NaoUtilException {
+	public static NaoJointInfos getJointInfos(NaoData nao) throws NaoUtilException {
 		if (nao == null)
 			throw new IllegalArgumentException(
 					"The argument 'nao' cannot be null.");
@@ -152,7 +152,7 @@ public class NaoUtil {
 	 * @throws NaoUtilException
 	 *             Thrown, if the sensor value request fails.
 	 */
-	public static String getSensorValue(Nao nao, String identifier)
+	public static String getSensorValue(NaoData nao, String identifier)
 			throws NaoUtilException {
 
 		if (nao == null)
@@ -164,7 +164,7 @@ public class NaoUtil {
 		// no else.
 
 		String result;
-		ALMemory alMemory = nao.createALMemory();
+		ALMemory alMemory = Nao.createALMemory(nao.getIP(), nao.getPort());
 
 		try {
 			result = (alMemory.getData(identifier).get(JSON_RETURN_VALUE_KEY))
@@ -192,7 +192,7 @@ public class NaoUtil {
 	 *             Thrown if the request fails.
 	 */
 	@SuppressWarnings("unchecked")
-	public static Map<String, String> getSensorValues(Nao nao,
+	public static Map<String, String> getSensorValues(NaoData nao,
 			List<Integer> identifier) throws NaoUtilException {
 
 		if (nao == null)
@@ -246,7 +246,7 @@ public class NaoUtil {
 	 * @throws NaoUtilException
 	 *             Thrown, if the request fails.
 	 */
-	public static List<String> getSensorValueIDs(Nao nao)
+	public static List<String> getSensorValueIDs(NaoData nao)
 			throws NaoUtilException {
 
 		if (nao == null)
@@ -254,7 +254,7 @@ public class NaoUtil {
 					"Argument 'nao' must not be null.");
 		// no else.
 
-		ALMemory alMemory = nao.createALMemory();
+		ALMemory alMemory = Nao.createALMemory(nao.getIP(), nao.getPort());
 
 		try {
 			/* Probably Process sensor ids IDs into an array. */
@@ -279,7 +279,7 @@ public class NaoUtil {
 	 *            The text to be said.
 	 * @return <code>true</code> if executed successfully.
 	 */
-	public static boolean say(Nao nao, String text) {
+	public static boolean say(NaoData nao, String text) {
 		return say(nao, text, new SayParameter[]{});
 	}
 
@@ -292,7 +292,7 @@ public class NaoUtil {
 	 * @param parameters a set of {@link SayParameter}s for passing parameters to adjust the voice of the nao.
 	 * @return <code>true</code> if executed successfully.
 	 */
-	public static boolean say(Nao nao, String text, SayParameter...parameters){
+	public static boolean say(NaoData nao, String text, SayParameter...parameters){
 		if (nao == null)
 			throw new IllegalArgumentException("Argument 'nao' cannot be null.");
 		else if (text == null)
@@ -308,7 +308,7 @@ public class NaoUtil {
 			throw new RuntimeException("UTF-8 not supported", ex);
 		}
 
-		ALTextToSpeech alTextToSpeech = nao.createALTextToSpeech();
+		ALTextToSpeech alTextToSpeech = Nao.createALTextToSpeech(nao.getIP(), nao.getPort());
 		if(parameters != null){
 			for (SayParameter sayParameter : parameters) {
 				alTextToSpeech.setParameter(sayParameter.getParameterName(), sayParameter.getParameterValue());
@@ -336,7 +336,7 @@ public class NaoUtil {
 	 * @return True, if the stiffness has been set successfully.
 	 * @throws IllegalArgumentException
 	 */
-	public static boolean setStiffness(Nao nao, float stiffness) {
+	public static boolean setStiffness(NaoData nao, float stiffness) {
 
 		if (nao == null)
 			throw new IllegalArgumentException("Argument 'nao' cannot be null.");
@@ -345,7 +345,7 @@ public class NaoUtil {
 					"Argument 'stiffness' must be between 0.0 and 1.0");
 		// no else.
 
-		ALMotion alMotion = nao.createALMotion();
+		ALMotion alMotion = Nao.createALMotion(nao.getIP(), nao.getPort());
 		String[] array;
 
 		try {
@@ -373,7 +373,7 @@ public class NaoUtil {
 	 *            The {@link Nao} that shall sit down.
 	 * @return <code>true</code> if the behavior has been executed successfully.
 	 */
-	public static boolean sitDown(Nao nao) {
+	public static boolean sitDown(NaoData nao) {
 		if (nao == null)
 			throw new IllegalArgumentException(
 					"The argument 'nao' cannot be null.");
@@ -391,7 +391,7 @@ public class NaoUtil {
 	 *            The {@link Nao} that shall stand up.
 	 * @return <code>true</code> if the behavior has been executed successfully.
 	 */
-	public static boolean standUp(Nao nao) {
+	public static boolean standUp(NaoData nao) {
 		if (nao == null)
 			throw new IllegalArgumentException(
 					"The argument 'nao' cannot be null.");
@@ -415,7 +415,7 @@ public class NaoUtil {
 	 * 
 	 *         TODO Test me TODO check arguments
 	 */
-	public static String startProfilingOfSensors(Nao nao, List<String> ids,
+	public static String startProfilingOfSensors(NaoData nao, List<String> ids,
 			int profilingInterval) {
 
 		StringBuffer query = new StringBuffer();
@@ -450,7 +450,7 @@ public class NaoUtil {
 	 * 
 	 *            TODO Test me TODO check arguments
 	 */
-	public static Map<Double, List<String>> stopProfilingOfSensors(Nao nao,
+	public static Map<Double, List<String>> stopProfilingOfSensors(NaoData nao,
 			List<String> ids, String sessionID) {
 
 		StringBuffer query = new StringBuffer();
@@ -510,7 +510,7 @@ public class NaoUtil {
 	 *            negative means: left) in meters.
 	 * @return <code>true</code> if method invocation was successful.
 	 */
-	public static boolean walkTo(Nao nao, float xDistance, float yDistance) {
+	public static boolean walkTo(NaoData nao, float xDistance, float yDistance) {
 		if (nao == null)
 			throw new IllegalArgumentException(
 					"The argument 'nao' cannot be null.");
@@ -536,7 +536,7 @@ public class NaoUtil {
 
 		Math.toDegrees(theta);
 
-		ALMotion alMotion = nao.createALMotion();
+		ALMotion alMotion = Nao.createALMotion(nao.getIP(), nao.getPort());
 		alMotion.walkTo(0f, 0f, (float) -theta);
 		alMotion.walkTo((float) wayToGo, 0f, 0f);
 		alMotion.walkTo(0f, 0f, (float) theta);
@@ -552,7 +552,7 @@ public class NaoUtil {
 	 *            The {@link Nao} that shall play the behavior.
 	 * @return <code>true</code> if the behavior has been executed successfully.
 	 */
-	public static boolean waveHello(Nao nao) {
+	public static boolean waveHello(NaoData nao) {
 		if (nao == null)
 			throw new IllegalArgumentException(
 					"The argument 'nao' cannot be null.");
@@ -570,7 +570,7 @@ public class NaoUtil {
 	 *            The {@link Nao} that shall play the behavior.
 	 * @return <code>true</code> if the behavior has been executed successfully.
 	 */
-	public static boolean wipeForehead(Nao nao) {
+	public static boolean wipeForehead(NaoData nao) {
 		if (nao == null)
 			throw new IllegalArgumentException(
 					"The argument 'nao' cannot be null.");
@@ -590,9 +590,9 @@ public class NaoUtil {
 	 *            {@link Nao}.
 	 * @return <code>true</code> if the behavior has been executed successfully.
 	 */
-	public static boolean runBehavior(Nao nao, String behavior) {
+	public static boolean runBehavior(NaoData nao, String behavior) {
 		try {
-			ALBehaviorManager alBM = nao.createALBehaviorManager();
+			ALBehaviorManager alBM = Nao.createALBehaviorManager(nao.getIP(), nao.getPort());
 			// TODO Why this fails? List<String> behaviors =
 			// jsonArrayToStringList((JSONArray) alBM
 			// .getInstalledBehaviors().get(JSON_RETURN_VALUE_KEY));
@@ -664,7 +664,7 @@ public class NaoUtil {
 	 *            <code>/proxy/run/ALTextToSpeech/say/'Hello.'</code>.
 	 * @throws JSONException
 	 */
-	protected static JSONObject requestAction(Nao nao, String action)
+	protected static JSONObject requestAction(NaoData nao, String action)
 			throws JSONException {
 		return new JSONObject(requestActionWithStringResult(nao, action));
 	}
@@ -679,11 +679,11 @@ public class NaoUtil {
 	 *            The request as a string. E.g.,
 	 *            <code>/proxy/run/ALTextToSpeech/say/'Hello.'</code>.
 	 */
-	protected static String requestActionWithStringResult(Nao nao, String action) {
+	protected static String requestActionWithStringResult(NaoData nao, String action) {
 		try {
 			action = action.replaceAll(" ", "%20");
 
-			URL request = new URL("http://" + nao.ip + ":" + nao.port + action);
+			URL request = new URL("http://" + nao.getIP() + ":" + nao.getPort() + action);
 			URLConnection response = request.openConnection();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(
 					response.getInputStream()));

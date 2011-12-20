@@ -3,6 +3,7 @@
 	<name>org.qualitune.naoservice.client.test</name>
 	<comment></comment>
 	<projects>
+		<project>org.qualitune.naoservice.client</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

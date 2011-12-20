@@ -31,16 +31,16 @@ public class NaoJointInfo {
 	protected long timeStamp;
 
 	/**
-	 * Creates a new {@link NaoJointInfo} for a given {@link Nao} and a given
+	 * Creates a new {@link NaoJointInfo} for a given {@link NaoData} and a given
 	 * jointID.
 	 * 
 	 * @param nao
-	 *            The {@link Nao}.
+	 *            The {@link NaoData}.
 	 * @param jointID
 	 *            The {@link NaoJointID}
 	 * @throws NaoUtilException
 	 */
-	public NaoJointInfo(Nao nao, NaoJointID jointID) throws NaoUtilException {
+	public NaoJointInfo(NaoData nao, NaoJointID jointID) throws NaoUtilException {
 
 		this.jointID = jointID;
 
@@ -51,16 +51,16 @@ public class NaoJointInfo {
 	 * Creates a new {@link NaoJointInfo}.
 	 * 
 	 * @param nao
-	 *            The {@link Nao} this {@link NaoJointInfo} belongs to.
+	 *            The {@link NaoData} this {@link NaoJointInfo} belongs to.
 	 * @param id
 	 *            The {@link NaoJointID} of this {@link NaoJointInfo}.
 	 * @param requestInfos
 	 *            If <code>true</code> this {@link NaoJointID} will by itself
-	 *            connect to the {@link Nao} and requests its infos. Otherwhise
+	 *            connect to the {@link NaoData} and requests its infos. Otherwhise
 	 *            they have to be set manually.
 	 * @throws NaoUtilException
 	 */
-	public NaoJointInfo(Nao nao, NaoJointID id, boolean requestInfos)
+	public NaoJointInfo(NaoData nao, NaoJointID id, boolean requestInfos)
 			throws NaoUtilException {
 		this.jointID = id;
 
@@ -258,10 +258,10 @@ public class NaoJointInfo {
 	 * Initializes this {@link NaoJointInfo}.
 	 * 
 	 * @param nao
-	 *            The {@link Nao} of this {@link NaoJointInfo}.
+	 *            The {@link NaoData} of this {@link NaoJointInfo}.
 	 * @throws NaoUtilException
 	 */
-	protected void init(Nao nao) throws NaoUtilException {
+	protected void init(NaoData nao) throws NaoUtilException {
 		List<Integer> identifiers = new ArrayList<Integer>();
 		switch (jointID) {
 		case HeadYaw:

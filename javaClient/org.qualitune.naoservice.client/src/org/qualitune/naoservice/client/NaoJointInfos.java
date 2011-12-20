@@ -30,7 +30,7 @@ public class NaoJointInfos {
 	 *            they have to be set manually.
 	 * @throws NaoUtilException
 	 */
-	public NaoJointInfos(Nao nao, boolean requestInfos) throws NaoUtilException {
+	public NaoJointInfos(NaoData nao, boolean requestInfos) throws NaoUtilException {
 
 		/* Create the infos. */
 		for (NaoJointID id : NaoJointID.values()) {

@@ -9,10 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.qualitune.naoservice.client.Nao;
 import org.qualitune.naoservice.client.NaoConstants;
+import org.qualitune.naoservice.client.NaoData;
 import org.qualitune.naoservice.client.NaoJointID;
 import org.qualitune.naoservice.client.NaoJointInfo;
 import org.qualitune.naoservice.client.NaoJointInfos;
@@ -26,13 +25,8 @@ import org.qualitune.naoservice.client.NaoUtilException;
  */
 public class TestNaoUtil {
 
-	/** The {@link Nao} proxy used for testing. */
-	protected static Nao nao;
-
-	@BeforeClass
-	public static void setUp() {
-		nao = new Nao("192.168.0.139", 8070);
-	}
+	/** A data holder object for storing IP and PORT for Nao proxies used for testing. */
+	protected static NaoData nao = new NaoData("192.168.0.139", 8070);
 
 	@AfterClass
 	public static void tearDown() {
