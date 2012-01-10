@@ -1,5 +1,3 @@
-package org.qualitune.naoservice.client;
-
 /**
  * Java abstraction layer for Nao humanoid robot.
  * This is automatically generated code. Do not modify it!
@@ -127,7 +125,7 @@ public abstract class Nao {
 			catch (Exception ex){
 				throw new RuntimeException("UTF-8 not supported", ex);
 			}
-			return result;
+			return result.replaceAll("%2F", "/");
 		}
 
 		/**

@@ -15,7 +15,7 @@ try {
 
     JSONObject result = new JSONObject(sb.toString());
     rd.close();
-    return result;
+    return result.replaceAll("%2F", "/");
 }
 
 catch (MalformedURLException e) {
