@@ -125,7 +125,7 @@ public abstract class Nao {
 			catch (Exception ex){
 				throw new RuntimeException("UTF-8 not supported", ex);
 			}
-			return result;
+			return result.replaceAll("%2F", "/");
 		}
 
 		/**
