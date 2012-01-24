@@ -154,7 +154,7 @@ class JavaNaoCodeGenerator(NaoCodeGenerator):
         '''
         
         doc = self.read_from_file(self.NAO_CLASS_DOC)
-        nao = (JavaClass.JavaBuilder("Nao", [JavaModifier.PUBLIC, JavaModifier.ABSTRACT])
+        nao = (JavaClass.JavaBuilder("Nao", [JavaModifier.PUBLIC, JavaModifier.STATIC])
                             .javadoc(doc)
                             .build())
         return nao
